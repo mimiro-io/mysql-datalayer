@@ -1,0 +1,10 @@
+{
+    "databaseServer" : "",
+    "baseUri" : "",
+    "database" : "",
+    "port" : "1433",
+    "schema" : "",
+    "tableMappings" : [
+
+    ]
+  }
