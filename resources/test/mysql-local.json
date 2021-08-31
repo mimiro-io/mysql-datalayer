@@ -1,0 +1,80 @@
+{
+  "id": "mysql-local",
+  "databaseServer": "localhost",
+  "database": "test",
+  "user": "root",
+  "password": "password",
+  "baseNameSpace": "http://data.test.io/newtestnamespace/",
+  "baseUri": "http://data.test.io/user/",
+  "port": "3306",
+  "schema": "mysql",
+  "tableMappings": [
+      {
+        "nameSpace": "user",
+        "query": "SELECT id, firstname, surname, timestamp, user_order_id from users %v",
+        "entityIdConstructor": "users/%s",
+        "tableName": "users",
+        "columnMappings": [
+            {
+              "fieldName": "id",
+              "isIdColumn": true
+            },
+            {
+              "fieldName": "firstname",
+              "isReference": false
+            },
+            {
+              "fieldName": "surname",
+              "isReference": false
+            },
+            {
+              "fieldName": "timestamp",
+              "isReference": false
+            },
+            {
+                "fieldName": "user_order_id",
+                "isReference": true,
+                "referenceTemplate": "http://data.test.io/newtestnamespace/user-orders/%s"
+            }
+        ],
+        "types": [
+        "http://data.test.io/newtestnamespace/User"
+        ]
+    }
+  ],
+  "postMappings": [
+    {
+      "datasetName": "users",
+      "tableName": "users",
+      "query": "REPLACE INTO users (id, firstname, surname, timestamp) VALUES (?,?,?,?);",
+      "config": {
+        "databaseServer": "localhost",
+        "database": "test",
+        "port": "3306",
+        "schema": "mysql",
+        "user": {
+          "type": "direct",
+          "key": "root"
+        },
+        "password": {
+          "type": "direct",
+          "key": "password"
+        }
+      },
+      "fieldMappings": [
+        {
+          "fieldName": "Firstname",
+          "order": 1
+        },
+        {
+          "fieldName": "Surname",
+          "order": 2
+        },
+        {
+          "fieldName": "Timestamp",
+          "order": 3
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "@context",
+    "namespaces": {
+      "ns3": "http://data.test.io/users/",
+      "ns4": "http://data.test.io/workplace/"
+    }
+  },
+  {
+    "id": "ns3:3",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+      "ns3:WorkId": "ns4:3096"
+    },
+    "props": {
+      "ns3:Firstname": "Frank",
+      "ns3:Surname": "and Hank",
+      "ns3:Timestamp": "2007-02-16 00:00:00"
+    }
+  },
+  {
+    "id": "ns3:4",
+    "recorded": 1616659529376358913,
+    "deleted": false,
+    "refs": {
+      "ns3:WorkId": "ns4:13003"
+    },
+    "props": {
+      "ns3:Firstname": "Hank",
+      "ns3:Surname": "The Frank",
+      "ns3:Timestamp": "2007-02-17 00:00:00"
+    }
+  }
+]
