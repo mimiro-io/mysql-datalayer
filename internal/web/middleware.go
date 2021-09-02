@@ -13,7 +13,6 @@ import (
 
 type Middleware struct {
 	logger     echo.MiddlewareFunc
-	cors       echo.MiddlewareFunc
 	jwt        echo.MiddlewareFunc
 	recover    echo.MiddlewareFunc
 	authorizer func(logger *zap.SugaredLogger, scopes ...string) echo.MiddlewareFunc
@@ -59,7 +58,6 @@ func (middleware *Middleware) configure(e *echo.Echo) {
 	if middleware.env.Auth.Middleware == "noop" { // don't enable local security (yet)
 		middleware.handler.Logger.Infof("WARNING: Security is disabled")
 	} else {
-		e.Use(middleware.cors)
 		e.Use(middleware.jwt)
 	}
 	e.Use(middleware.recover)
