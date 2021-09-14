@@ -1,6 +1,8 @@
-# mysql-datalayer
+# MYSQL Data Layer
 
-Datahub Data Layer for MySQL
+A Data Layer for MySQL that conforms to the Universal Data API specification. This data layer can be used in conjunction with the MIMIRO data hub to create a modern data fabric. The MYSQL data layer can be configured to expose tables and views from MYSQL as a stream of changes or a current snapshot. Rows in a table are represented in JSON according the Entity Graph Data model that is described in the UDA specification. This data layer can be run as a standalone binary or as a docker container.
+
+Releases of this data layer are published to docker hub in the repository: `mimiro/mysql-datalayer`
 
 ## Testing
 
@@ -80,10 +82,6 @@ By default the PROFILE is set to local, to easier be able to run on local machin
 security features, and must NOT be set to local in . It should be PROFILE=dev or PROFILE=prod.
 
 This also changes the loggers.
-
-## Deployment
-
-TBA
 
 ## Configuration
 
