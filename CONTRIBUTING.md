@@ -1,4 +1,4 @@
-# Contributing to MIMIRO data hub
+# Contributing to MIMIRO MYSQL Data Layer 
 We welcome your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
 
 - Reporting a bug
