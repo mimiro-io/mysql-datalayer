@@ -1,6 +1,6 @@
-# MYSQL Data Layer
+# MySQL Data Layer
 
-A Data Layer for MySQL that conforms to the Universal Data API specification (https://open.mimiro.io/specifications/uda/latest.html). This data layer can be used in conjunction with the MIMIRO data hub to create a modern data fabric. The MYSQL data layer can be configured to expose tables and views from MYSQL as a stream of changes or a current snapshot. Rows in a table are represented in JSON according the Entity Graph Data model that is described in the UDA specification. This data layer can be run as a standalone binary or as a docker container.
+A Data Layer for MySQL (https://www.mysql.com/) that conforms to the Universal Data API specification (https://open.mimiro.io/specifications/uda/latest.html). This data layer can be used in conjunction with the MIMIRO data hub to create a modern data fabric. The MYSQL data layer can be configured to expose tables and views from MYSQL as a stream of changes or a current snapshot. Rows in a table are represented in JSON according the Entity Graph Data model that is described in the UDA specification. This data layer can be run as a standalone binary or as a docker container.
 
 Releases of this data layer are published to docker hub in the repository: `mimiro/mysql-datalayer`
 
