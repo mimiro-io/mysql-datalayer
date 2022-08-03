@@ -11,7 +11,7 @@
   "tableMappings": [
       {
         "nameSpace": "user",
-        "query": "SELECT id, firstname, surname, timestamp, user_order_id from users %v",
+        "query": "SELECT id, firstname, surname, timestamp from users %v",
         "entityIdConstructor": "users/%s",
         "tableName": "users",
         "columnMappings": [
@@ -30,11 +30,6 @@
             {
               "fieldName": "timestamp",
               "isReference": false
-            },
-            {
-                "fieldName": "user_order_id",
-                "isReference": true,
-                "referenceTemplate": "http://data.test.io/newtestnamespace/user-orders/%s"
             }
         ],
         "types": [
