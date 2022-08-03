@@ -2,7 +2,7 @@ package web
 
 import (
 	"context"
-	"github.com/DataDog/datadog-go/statsd"
+	"github.com/DataDog/datadog-go/v5/statsd"
 	"github.com/labstack/echo/v4"
 	"github.com/mimiro-io/mysql-datalayer/internal/conf"
 	"go.uber.org/fx"

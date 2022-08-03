@@ -1,7 +1,7 @@
 package conf
 
 import (
-	"github.com/DataDog/datadog-go/statsd"
+	"github.com/DataDog/datadog-go/v5/statsd"
 	"github.com/spf13/viper"
 )
 
@@ -13,9 +13,6 @@ func NewStatsd(env *Env) (statsd.ClientInterface, error) {
 		opt := statsd.WithNamespace(service)
 		env.Logger.Info("Statsd is configured on: ", viper.GetViper().GetString("DD_AGENT_HOST"))
 		c, err := statsd.New(viper.GetViper().GetString("DD_AGENT_HOST"), opt)
-		c.Tags = []string{
-			env.ServiceName,
-		}
 		if err != nil {
 			return nil, err
 		}
