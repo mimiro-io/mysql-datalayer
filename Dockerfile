@@ -1,4 +1,4 @@
-FROM golang:1.16.0 as builder
+FROM golang:1.18.0 as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -9,14 +9,20 @@ COPY go.mod go.sum ./
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN go mod download
 
-# Copy the source from the current directory to the Working Directory inside the container
-COPY . .
 
 FROM builder as build
 
+# Copy the source from the current directory to the Working Directory inside the container
+COPY cmd ./cmd
+COPY internal ./internal
+COPY resources ./resources
+COPY *.go ./
+
 # Build the Go app
-RUN go vet ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o server cmd/mysql/main.go
+
+RUN go vet ./...
+RUN go test ./... -v
 
 
 FROM alpine:latest
