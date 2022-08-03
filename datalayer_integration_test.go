@@ -193,11 +193,11 @@ func TestIntegration(t *testing.T) {
 
 			body, err := ioutil.ReadAll(resp.Body)
 			bodyString := string(body)
-			//fmt.Println(bodyString)
+			fmt.Println(bodyString)
 			g.Assert(bodyString).IsNotNil()
-			g.Assert(strings.Contains(bodyString, "{\"id\":\"@context\",\"namespaces\":{\"ns0\":\"http://data.test.io/user/user/\",\"rdf\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"}}\n,"+
-				"{\"id\":\"http://data.test.io/user/users/1\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/users\"},\"props\":{\"ns0:firstname\":\"Hank\",\"ns0:id\":1,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-16T00:00:00Z\"}}\n,"+
-				"{\"id\":\"http://data.test.io/user/users/2\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/users\"},\"props\":{\"ns0:firstname\":\"Frank\",\"ns0:id\":2,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-17T00:00:00Z\"}}")).IsTrue()
+			g.Assert(strings.Contains(bodyString, "{\"id\":\"@context\",\"namespaces\":{\"ns0\":\"http://data.test.io/newtestnamespace/user/\",\"rdf\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"}}")).IsTrue()
+			g.Assert(strings.Contains(bodyString, "{\"id\":\"http://data.test.io/user/users/1\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/newtestnamespace/User\"},\"props\":{\"ns0:firstname\":\"Hank\",\"ns0:id\":1,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-16T00:00:00Z\"}}")).IsTrue()
+			g.Assert(strings.Contains(bodyString, "{\"id\":\"http://data.test.io/user/users/2\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/newtestnamespace/User\"},\"props\":{\"ns0:firstname\":\"Frank\",\"ns0:id\":2,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-17T00:00:00Z\"}}")).IsTrue()
 
 			fileBytes, err = ioutil.ReadFile("./resources/test/testdata_3.json")
 			g.Assert(err).IsNil()
@@ -216,11 +216,11 @@ func TestIntegration(t *testing.T) {
 			bodyString = string(body)
 			//fmt.Println(bodyString)
 			g.Assert(bodyString).IsNotNil()
-			g.Assert(strings.Contains(bodyString, "{\"id\":\"@context\",\"namespaces\":{\"ns0\":\"http://data.test.io/user/user/\",\"rdf\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"}}\n,"+
-				"{\"id\":\"http://data.test.io/user/users/1\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/users\"},\"props\":{\"ns0:firstname\":\"Hank\",\"ns0:id\":1,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-16T00:00:00Z\"}}\n,"+
-				"{\"id\":\"http://data.test.io/user/users/2\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/users\"},\"props\":{\"ns0:firstname\":\"Frank\",\"ns0:id\":2,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-17T00:00:00Z\"}}\n,"+
-				"{\"id\":\"http://data.test.io/user/users/3\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/users\"},\"props\":{\"ns0:firstname\":\"Frank\",\"ns0:id\":3,\"ns0:surname\":\"and Hank\",\"ns0:timestamp\":\"2007-02-16T00:00:00Z\"}}\n,"+
-				"{\"id\":\"http://data.test.io/user/users/4\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/users\"},\"props\":{\"ns0:firstname\":\"Hank\",\"ns0:id\":4,\"ns0:surname\":\"The Frank\",\"ns0:timestamp\":\"2007-02-17T00:00:00Z\"}}")).IsTrue()
+			g.Assert(strings.Contains(bodyString, "{\"id\":\"@context\",\"namespaces\":{\"ns0\":\"http://data.test.io/newtestnamespace/user/\",\"rdf\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"}}\n,"+
+				"{\"id\":\"http://data.test.io/user/users/1\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/newtestnamespace/User\"},\"props\":{\"ns0:firstname\":\"Hank\",\"ns0:id\":1,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-16T00:00:00Z\"}}\n,"+
+				"{\"id\":\"http://data.test.io/user/users/2\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/newtestnamespace/User\"},\"props\":{\"ns0:firstname\":\"Frank\",\"ns0:id\":2,\"ns0:surname\":\"The Tank\",\"ns0:timestamp\":\"2007-02-17T00:00:00Z\"}}\n,"+
+				"{\"id\":\"http://data.test.io/user/users/3\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/newtestnamespace/User\"},\"props\":{\"ns0:firstname\":\"Frank\",\"ns0:id\":3,\"ns0:surname\":\"and Hank\",\"ns0:timestamp\":\"2007-02-16T00:00:00Z\"}}\n,"+
+				"{\"id\":\"http://data.test.io/user/users/4\",\"deleted\":false,\"refs\":{\"rdf:type\":\"http://data.test.io/newtestnamespace/User\"},\"props\":{\"ns0:firstname\":\"Hank\",\"ns0:id\":4,\"ns0:surname\":\"The Frank\",\"ns0:timestamp\":\"2007-02-17T00:00:00Z\"}}")).IsTrue()
 		})
 
 	})
