@@ -25,7 +25,7 @@ func Authorize(logger *zap.SugaredLogger, scopes ...string) echo.MiddlewareFunc 
 				if len(claims.scopes()) > 0 {
 					claimScopes = strings.Split(claims.scopes()[0], " ")
 				}
-				res := intersect.Simple(claimScopes, scopes).([]interface{})
+				res := intersect.Simple(claimScopes, scopes)
 				if len(res) == 0 { // no intersection
 					logger.Debugw("User attempted login with missing or wrong scope",
 						"subject", token.Claims.(*CustomClaims).Subject,
@@ -46,7 +46,7 @@ func Authorize(logger *zap.SugaredLogger, scopes ...string) echo.MiddlewareFunc 
 					}
 				}
 			}
-			
+
 			return next(c)
 		}
 
