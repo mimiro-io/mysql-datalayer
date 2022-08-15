@@ -93,10 +93,8 @@ func (postLayer *PostLayer) PostEntities(datasetName string, entities []*Entity)
 		postLayer.logger.Errorf("Please add query in config for %s in ", datasetName)
 		return errors.New(fmt.Sprintf("no query found in config for dataset: %s", datasetName))
 	}
-	postLayer.logger.Debug(query)
-	queryDel := fmt.Sprintf(`DELETE FROM %s WHERE %s = ?;`, strings.ToLower(postLayer.PostRepo.postTableDef.TableName), strings.ToLower(postLayer.PostRepo.postTableDef.IdColumn))
 
-	postLayer.logger.Debug(queryDel)
+	queryDel := fmt.Sprintf(`DELETE FROM %s WHERE %s = ?;`, strings.ToLower(postLayer.PostRepo.postTableDef.TableName), strings.ToLower(postLayer.PostRepo.postTableDef.IdColumn))
 
 	fields := postLayer.PostRepo.postTableDef.FieldMappings
 
