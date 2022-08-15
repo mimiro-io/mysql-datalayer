@@ -42,7 +42,7 @@
         "datasetName": "users",
         "tableName": "users",
         "query": "INSERT INTO users (id, firstname, surname, timestamp) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES (id),\n firstname = VALUES (firstname),\n surname = VALUES (surname),\n timestamp = VALUES (dry_timestampmatter);",
-        "idColumn": "qr_code",
+        "idColumn": "id",
         "config":
           {
             "databaseServer": "localhost",
