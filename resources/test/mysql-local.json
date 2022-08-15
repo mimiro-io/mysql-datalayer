@@ -39,37 +39,40 @@
   ],
   "postMappings": [
     {
-      "datasetName": "users",
-      "tableName": "users",
-      "query": "REPLACE INTO users (id, firstname, surname, timestamp) VALUES (?,?,?,?);",
-      "config": {
-        "databaseServer": "localhost",
-        "database": "test",
-        "port": "3306",
-        "schema": "mysql",
-        "user": {
-          "type": "direct",
-          "key": "root"
-        },
-        "password": {
-          "type": "direct",
-          "key": "password"
-        }
-      },
-      "fieldMappings": [
-        {
-          "fieldName": "Firstname",
-          "order": 1
-        },
-        {
-          "fieldName": "Surname",
-          "order": 2
-        },
-        {
-          "fieldName": "Timestamp",
-          "order": 3
-        }
-      ]
+        "datasetName": "users",
+        "tableName": "users",
+        "query": "INSERT INTO users (id, firstname, surname, timestamp) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES (id),\n firstname = VALUES (firstname),\n surname = VALUES (surname),\n timestamp = VALUES (dry_timestampmatter);",
+        "idColumn": "qr_code",
+        "config":
+          {
+            "databaseServer": "localhost",
+            "database": "test",
+            "port": "3306",
+            "schema": "mysql",
+            "user":
+              {
+                "type": "direct",
+                "key": "root"
+              },
+            "password": {
+            "type": "direct",
+            "key": "password"
+              }
+          },
+        "fieldMappings": [
+          {
+            "fieldName": "Firstname",
+            "order": 1
+          },
+          {
+            "fieldName": "Surname",
+            "order": 2
+          },
+          {
+            "fieldName": "Timestamp",
+            "order": 3
+          }
+        ]
     }
   ]
 }
