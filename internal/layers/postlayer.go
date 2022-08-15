@@ -56,7 +56,7 @@ func (postLayer *PostLayer) connect() (*sql.DB, error) {
 		Path:   *postLayer.PostRepo.postTableDef.Config.Database,
 	}
 
-	db, err := sql.Open(u.Scheme, fmt.Sprintf("%v:%v@(%v)/%v?%s", u.User.Username(),  postLayer.PostRepo.postTableDef.Config.Password.GetValue(), u.Host, u.Path, "parseTime=true"))
+	db, err := sql.Open(u.Scheme, fmt.Sprintf("%v:%v@(%v)/%v?%s", u.User.Username(), postLayer.PostRepo.postTableDef.Config.Password.GetValue(), u.Host, u.Path, "parseTime=true"))
 
 	if err != nil {
 		postLayer.logger.Warn("Error creating connection: ", err.Error())
@@ -94,8 +94,8 @@ func (postLayer *PostLayer) PostEntities(datasetName string, entities []*Entity)
 		return errors.New(fmt.Sprintf("no query found in config for dataset: %s", datasetName))
 	}
 	postLayer.logger.Debug(query)
+	queryDel := fmt.Sprintf(`DELETE FROM %s WHERE %s = ?;`, strings.ToLower(postLayer.PostRepo.postTableDef.TableName), strings.ToLower(postLayer.PostRepo.postTableDef.IdColumn))
 
-	queryDel := fmt.Sprintf(`DELETE FROM %s WHERE id = ?;`, strings.ToLower(postLayer.PostRepo.postTableDef.TableName))
 	postLayer.logger.Debug(queryDel)
 
 	fields := postLayer.PostRepo.postTableDef.FieldMappings
@@ -130,7 +130,6 @@ func (postLayer *PostLayer) PostEntities(datasetName string, entities []*Entity)
 		s := entity.StripProps()
 
 		args := make([]interface{}, len(fields))
-
 
 		for i, field := range fields {
 			args[i] = s[field.FieldName]
