@@ -48,24 +48,19 @@ func (handler *postHandler) postHandler(c echo.Context) error {
 
 	entities := make([]*layers.Entity, 0) //why 0?
 
-	isFirst := true
-
 	err := parseStream(c.Request().Body, func(value *jstream.MetaValue) error {
-		if isFirst {
-			isFirst = false
-		} else {
-			entities = append(entities, asEntity(value))
-			read++
-			if read == batchSize {
-				read = 0
 
-				err := postLayer.PostEntities(datasetName, entities)
-				if err != nil {
-					handler.logger.Error(err)
-					return err
-				}
-				entities = make([]*layers.Entity, 0)
+		entities = append(entities, asEntity(value))
+		read++
+		if read == batchSize {
+			read = 0
+
+			err := postLayer.PostEntities(datasetName, entities)
+			if err != nil {
+				handler.logger.Error(err)
+				return err
 			}
+			entities = make([]*layers.Entity, 0)
 		}
 
 		return nil
