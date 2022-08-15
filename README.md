@@ -150,7 +150,8 @@ A complete example can be found under "resources/test/test-config.json"
         {
             "datasetName": "datahub.Testdata",
             "tableName": "Testdata",
-            "query": "INSERT INTO testdata (id, foo, bar) VALUES (?, ?, ?);",
+            "query": "INSERT INTO users (id, firstname, surname, timestamp) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE id = VALUES (id),\n firstname = VALUES (firstname),\n surname = VALUES (surname),\n timestamp = VALUES (dry_timestampmatter);",
+            "idColumn": "qr_code",
             "config": {
                 "databaseServer": "[DB SERVER]",
                 "database": "[DBNAME]",
@@ -168,12 +169,16 @@ A complete example can be found under "resources/test/test-config.json"
             },
             "fieldMappings": [
                 {
-                    "fieldName": "foo",
+                    "fieldName": "Firstname",
                     "order": 1
                 },
                 {
-                    "fieldName": "bar",
+                    "fieldName": "Surname",
                     "order": 2
+                },
+                {
+                    "fieldName": "Timestamp",
+                    "order": 3
                 }
             ]
         }
