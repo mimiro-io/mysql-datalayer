@@ -9,6 +9,7 @@ import (
 	"github.com/mimiro-io/mysql-datalayer/internal/conf"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
+	"net/url"
 	"sort"
 	"strings"
 )
@@ -48,9 +49,14 @@ func NewPostLayer(lc fx.Lifecycle, cmgr *conf.ConfigurationManager, logger *zap.
 
 func (postLayer *PostLayer) connect() (*sql.DB, error) {
 
-	u := postLayer.cmgr.Datalayer.GetUrl(postLayer.PostRepo.postTableDef)
+	u := &url.URL{
+		Scheme: "mysql",
+		User:   url.UserPassword(postLayer.PostRepo.postTableDef.Config.User.GetValue(), postLayer.PostRepo.postTableDef.Config.Password.GetValue()),
+		Host:   fmt.Sprintf("%s:%s", *postLayer.PostRepo.postTableDef.Config.DatabaseServer, *postLayer.PostRepo.postTableDef.Config.Port),
+		Path:   *postLayer.PostRepo.postTableDef.Config.Database,
+	}
 
-	db, err := sql.Open(u.Scheme, fmt.Sprintf("%v@(%v)/%v", u.User, u.Host, u.Path))
+	db, err := sql.Open(u.Scheme, fmt.Sprintf("%v:%v@(%v)/%v?%s", u.User.Username(), postLayer.PostRepo.postTableDef.Config.Password.GetValue(), u.Host, u.Path, "parseTime=true"))
 
 	if err != nil {
 		postLayer.logger.Warn("Error creating connection: ", err.Error())
@@ -88,8 +94,8 @@ func (postLayer *PostLayer) PostEntities(datasetName string, entities []*Entity)
 		return errors.New(fmt.Sprintf("no query found in config for dataset: %s", datasetName))
 	}
 	postLayer.logger.Debug(query)
+	queryDel := fmt.Sprintf(`DELETE FROM %s WHERE %s = ?;`, strings.ToLower(postLayer.PostRepo.postTableDef.TableName), strings.ToLower(postLayer.PostRepo.postTableDef.IdColumn))
 
-	queryDel := fmt.Sprintf(`DELETE FROM %s WHERE id = ?;`, strings.ToLower(postLayer.PostRepo.postTableDef.TableName))
 	postLayer.logger.Debug(queryDel)
 
 	fields := postLayer.PostRepo.postTableDef.FieldMappings
@@ -123,12 +129,10 @@ func (postLayer *PostLayer) PostEntities(datasetName string, entities []*Entity)
 	for _, entity := range entities {
 		s := entity.StripProps()
 
-		args := make([]interface{}, len(fields)+1)
-
-		args[0] = strings.SplitAfter(entity.ID, ":")[1]
+		args := make([]interface{}, len(fields))
 
 		for i, field := range fields {
-			args[i+1] = s[field.FieldName]
+			args[i] = s[field.FieldName]
 		}
 
 		if !entity.IsDeleted { //If is deleted False --> Do not store
