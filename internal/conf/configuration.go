@@ -47,6 +47,7 @@ type PostMapping struct {
 	DatasetName   string          `json:"datasetName"`
 	TableName     string          `json:"tableName"`
 	Query         string          `json:"query"`
+	IdColumn      string          `json:"idColumn"`
 	Config        *TableConfig    `json:"config"`
 	FieldMappings []*FieldMapping `json:"fieldMappings"`
 }
@@ -61,10 +62,10 @@ type TableConfig struct {
 }
 
 type FieldMapping struct {
-	FieldName       string `json:"fieldName"`
+	FieldName    string `json:"fieldName"`
 	ToMySQLField string `json:"toMySQLField"`
-	SortOrder       int    `json:"order"`
-	Type            string `json:"type"`
+	SortOrder    int    `json:"order"`
+	Type         string `json:"type"`
 }
 
 type VariableGetter struct {
