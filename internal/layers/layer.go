@@ -384,6 +384,14 @@ func (l *Layer) toEntity(rowType []interface{}, cols []string, colTypes []*sql.C
 			case "BIT":
 				ptrToNullBool := raw.(*HexNullBool)
 				entity.Properties[colName] = ptrToNullBool
+			case "TINYBLOB", "BLOB":
+				ptrToRawBytes := raw.(*sql.RawBytes)
+				if *ptrToRawBytes != nil {
+					// Encode the BLOB data to Base64
+					base64Data := base64.StdEncoding.EncodeToString([]byte(*ptrToRawBytes))
+					val = base64Data
+					entity.Properties[colName] = val
+				}
 			default:
 				l.logger.Infof("Got: %s for %s", ctName, colName)
 			}
