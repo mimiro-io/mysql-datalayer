@@ -7,7 +7,7 @@
         "config_refresh_interval": "200s"
     },
     "system_config": {
-        "user" : "user",
+        "user" : "root",
         "password" : "password",
         "database" : "myapp",
         "host" : "localhost",
@@ -17,7 +17,7 @@
         {
             "name": "products",
             "source_config": {
-                "table_name" : "Product",
+                "table_name" : "product",
                 "since_column" : "Timestamp",
                 "flush_threshold": 5
             },
@@ -39,7 +39,8 @@
                     },
                     {
                         "entity_property": "Date",
-                        "property": "date"
+                        "property": "date",
+                        "data_type": "timestamp"
                     },
                     {
                         "entity_property": "Reporter",
@@ -238,8 +239,8 @@
             "source_config": {
                 "flush_threshold": 5,
                 "since_column" : "Timestamp",
-                "since_table" : "Product",
-                "data_query" : "SELECT * from Product"
+                "since_table" : "product",
+                "data_query" : "SELECT * from product"
             },
             "incoming_mapping_config": {
                 "base_uri": "http://data.test.io/newtestnamespace/product2/",
@@ -259,7 +260,8 @@
                     },
                     {
                         "entity_property": "Date",
-                        "property": "date"
+                        "property": "date",
+                        "datatype": "timestamp"
                     },
                     {
                         "entity_property": "Reporter",
@@ -289,8 +291,7 @@
         {
             "name": "customers",
             "source_config": {
-                "table_name" : "Customer",
-                "since_column" : "last_modified",
+                "table_name" : "customer",
                 "entity_column" : "entity"
             }
         }

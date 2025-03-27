@@ -34,7 +34,7 @@ func TestIntegration(t *testing.T) {
 				ExposedPorts: []string{"3306/tcp"},
 				Env: map[string]string{
 					"MYSQL_ROOT_PASSWORD": "password",
-					"MYSQL_DATABASE":      "testdb",
+					"MYSQL_DATABASE":      "myapp",
 				},
 				WaitingFor: wait.ForLog("port: 3306  MySQL Community Server - GPL"),
 			}
@@ -56,7 +56,7 @@ func TestIntegration(t *testing.T) {
 			os.Setenv("CONFIG_LOCATION", "file://"+testConf.Name())
 			os.Setenv("MYSQL_DB_USER", "root")
 			os.Setenv("MYSQL_DB_PASSWORD", "password")
-			dsn := fmt.Sprintf("root:password@tcp(%s:%s)/testdb", ip, port)
+			dsn := fmt.Sprintf("root:password@tcp(%s:%s)/myapp?parseTime=true&multiStatements=true", ip, port)
 			db, err := sql.Open("mysql", dsn)
 			defer db.Close()
 			conn, err = db.Conn(ctx)
@@ -79,7 +79,7 @@ func TestIntegration(t *testing.T) {
 
 			os.Stdout = oldOut
 			os.Stderr = oldErr
-			os.Unsetenv("SERVER_PORT")
+			//os.Unsetenv("SERVER_PORT")
 		})
 		g.After(func() {
 			ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
