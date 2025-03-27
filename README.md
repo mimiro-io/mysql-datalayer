@@ -1,4 +1,146 @@
-# MySQL Data Layer
+# UDA Datalayer for MySql database
+
+A Data Layer for [MySQL](https://www.mysql.com/) that conforms to the Universal Data API specification (https://open.mimiro.io/specifications/uda/latest.html).
+This data layer can be used in conjunction with the MIMIRO data hub (https://github.com/mimiro-io/datahub)
+to create a modern data fabric.
+The MySQL data layer can be configured to expose tables and views from a MySQL database as a stream of changes or a current snapshot.
+Rows in a table are represented in JSON according the Entity Graph Data model that is described in the UDA specification.
+This data layer can be run as a standalone binary or as a docker container.
+
+Releases of this data layer are published to docker hub in the repository: mimiro/mysql-datalayer
+
+## Configuration
+
+The layer can be configured with a [common-datalayer configuration](https://github.com/mimiro-io/common-datalayer?tab=readme-ov-file#data-layer-configuration)
+file.
+
+Example for the `layer_config` section, which configures the API.:
+
+```json
+{
+  "layer_config": {
+    "service_name": "my-mysql-datalayer",
+    "port": "8080",
+    "config_refresh_interval": "600s",
+    "log_level": "warn",
+    "log_format": "json"
+  }
+}
+```
+
+In addition, the Mysql data layer requires a `system_config` section to configure the Mysql connection:
+
+```json
+{
+  "system_config": {
+    "host": "localhost",
+    "port": "3306",
+    "database": "testdb",
+    "user": "testuser",
+    "password": "testpassword"
+  }
+}
+```
+
+To add datasets (tables) to the configuration, refer to the [common-datalayer configuration](https://github.com/mimiro-io/common-datalayer?tab=readme-ov-file#data-layer-configuration).
+The mysql specific options in a dataset configuration are these `source` options:
+
+```json
+{
+  "source": {
+    "table_name": "name of the mapped table", // required
+    "data_query": "SELECT * FROM table_name", // optional, query to fetch data from the table
+    "flush_threshold": 1000, // max number of rows to buffer before writing to db. optional
+    "since_column": "my_column" // optional, column to use as a watermark for incremental reads
+    "since_table": "table_name" // optional, table to use as a watermark for incremental reads
+  }
+}
+```
+
+### flush threshold
+
+The layer will combine many DML operations into one big statement to improve performance. Depending
+on the size of the rows, the maximum number of rows to buffer before writing to the database can be
+adjusted. The default is 1000 rows.
+
+### data query
+
+The `data_query` option can be used to specify a custom query to fetch data from the database or table.
+If the `data_query` is not provided, the layer will use `SELECT * FROM table_name` as the default query.
+Make sure to specify the columns you expect to return from the query in the `column_mappings` section of the dataset configuration.
+
+### since column
+
+If the dataset is configured with a `since_column`, the layer will use this
+column as a watermark in incremental reads.
+The max value in the column will be encoded as continuation token in read responses.
+
+See [here](./test_integration/integration-test-config.json) for a full example configuration.
+
+### since table
+
+If the dataset is configured with a `since_table`, the layer will use this table to store the watermark in incremental reads.
+
+
+## Running
+
+### run the binary
+
+From source:
+
+```bash
+DATALAYER_CONFIG_PATH=/path/to/config.json go run ./cmd/mysql-datalayer/main.go
+```
+
+### run the docker container
+
+```bash
+docker run \
+  -p 8080:8080 \
+  -v /path/to/config.json:./config/config.json \
+  mimiro/mysql-datalayer mysql-datalayer
+```
+
+Note that most top level configuration parameters can be provided by environment
+variables, overriding corresponding values in json configuration.
+The accepted environment variables are:
+
+```bash
+DATALAYER_CONFIG_PATH
+SERVICE_NAME
+PORT
+CONFIG_REFRESH_INTERVAL
+LOG_LEVEL
+LOG_FORMAT
+STATSD_ENABLED
+STATSD_AGENT_ADDRESS
+MYSQL_HOSTNAME
+MYSQL_PORT
+MYSQL_DATABASE
+MYSQL_USER
+MYSQL_PASSWORD
+```
+
+So a typical docker run command could look like this:
+
+```bash
+docker run \
+  -p 8080:8080 \
+  -e PORT=8080 \
+  -e LOG_LEVEL=info \
+  -e LOG_FORMAT=json \
+  -e config_refresh_interval=1h \
+  -e MYSQL_HOSTNAME=localhost \
+  -e MYSQL_PORT=3306 \
+  -e MYSQL_DB=testdb \
+  -e MYSQL_USER=testuser \
+  -e MYSQL_PASSWORD=testpassword \
+  -e DATALAYER_CONFIG_PATH=/etc/config.json \
+  -v /path/to/config.json:/etc/config.json \
+  mimiro/mysql-datalayer mysql-datalayer
+```
+
+# LEGACY MySQL Data Layer
 
 A Data Layer for MySQL (https://www.mysql.com/) that conforms to the Universal Data API specification (https://open.mimiro.io/specifications/uda/latest.html). This data layer can be used in conjunction with the MIMIRO data hub (https://github.com/mimiro-io/datahub) to create a modern data fabric. The MySQL data layer can be configured to expose tables and views from a MySQL database as a stream of changes or a current snapshot. Rows in a table are represented in JSON according the Entity Graph Data model that is described in the UDA specification. This data layer can be run as a standalone binary or as a docker container.
 
