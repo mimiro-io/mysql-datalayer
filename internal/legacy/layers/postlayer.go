@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/mimiro-io/mysql-datalayer/internal/conf"
+	conf2 "github.com/mimiro-io/mysql-datalayer/internal/legacy/conf"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"net/url"
@@ -15,18 +15,18 @@ import (
 )
 
 type PostLayer struct {
-	cmgr     *conf.ConfigurationManager //
+	cmgr     *conf2.ConfigurationManager //
 	logger   *zap.SugaredLogger
 	PostRepo *PostRepository //exported because it needs to deferred from main??
 }
 type PostRepository struct {
 	DB           *sql.DB
 	ctx          context.Context
-	postTableDef *conf.PostMapping
+	postTableDef *conf2.PostMapping
 	digest       [16]byte
 }
 
-func NewPostLayer(lc fx.Lifecycle, cmgr *conf.ConfigurationManager, logger *zap.SugaredLogger) *PostLayer {
+func NewPostLayer(lc fx.Lifecycle, cmgr *conf2.ConfigurationManager, logger *zap.SugaredLogger) *PostLayer {
 	postLayer := &PostLayer{logger: logger.Named("layer")}
 	postLayer.cmgr = cmgr
 	postLayer.PostRepo = &PostRepository{
@@ -155,7 +155,7 @@ func (postLayer *PostLayer) PostEntities(datasetName string, entities []*Entity)
 	return nil
 }
 
-func (postLayer *PostLayer) GetTableDefinition(datasetName string) *conf.PostMapping {
+func (postLayer *PostLayer) GetTableDefinition(datasetName string) *conf2.PostMapping {
 	for _, table := range postLayer.cmgr.Datalayer.PostMappings {
 		if table.DatasetName == datasetName {
 			return table

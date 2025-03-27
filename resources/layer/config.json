@@ -1,0 +1,298 @@
+{
+    "layer_config": {
+        "port": "17777",
+        "service_name": "mysql_service",
+        "log_level": "DEBUG",
+        "log_format": "json",
+        "config_refresh_interval": "200s"
+    },
+    "system_config": {
+        "user" : "user",
+        "password" : "password",
+        "database" : "myapp",
+        "host" : "localhost",
+        "port" : "3306"
+    },
+    "dataset_definitions": [
+        {
+            "name": "products",
+            "source_config": {
+                "table_name" : "Product",
+                "since_column" : "Timestamp",
+                "flush_threshold": 5
+            },
+            "incoming_mapping_config": {
+                "base_uri": "http://data.test.io/newtestnamespace/product/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "strip_ref_prefix": true
+                    },
+                    {
+                        "entity_property": "Product_Id",
+                        "property": "product_id"
+                    },
+                    {
+                        "entity_property": "ProductPrice",
+                        "property": "productprice"
+                    },
+                    {
+                        "entity_property": "Date",
+                        "property": "date"
+                    },
+                    {
+                        "entity_property": "Reporter",
+                        "property": "reporter"
+                    },
+                    {
+                        "entity_property": "Version",
+                        "property": "version"
+                    }
+                ]
+            },
+            "outgoing_mapping_config": {
+                "base_uri": "http://data.sample.org/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "uri_value_pattern": "http://data.sample.org/things/{value}"
+                    },
+                    {
+                        "entity_property": "product_id",
+                        "property": "product_id"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "animals",
+            "source_config": {
+                "table_name" : "animals",
+                "since_column" : "updated_at",
+                "since_table" : "animals",
+                "flush_threshold": 100,
+                "data_query": "SELECT * FROM animals"
+            },
+            "incoming_mapping_config": {
+                "base_uri": "http://data.mimiro.io/cima/cattle/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "strip_ref_prefix": false
+                    },
+                    {
+                        "entity_property": "animal_id",
+                        "property": "animal_id"
+                    },
+                    {
+                        "entity_property": "calf_id",
+                        "property": "calf_id"
+                    },
+                    {
+                        "entity_property": "animal_type",
+                        "property": "animal_type"
+                    },
+                    {
+                        "entity_property": "origin_marking",
+                        "property": "origin_marking"
+                    },
+                    {
+                        "entity_property": "cattle_group_id",
+                        "property": "cattle_group_id"
+                    },
+                    {
+                        "entity_property": "ear_tag",
+                        "property": "ear_tag"
+                    },
+                    {
+                        "entity_property": "breed_id",
+                        "property": "breed_id"
+                    },
+                    {
+                        "entity_property": "breed_composition",
+                        "property": "breed_composition"
+                    },
+                    {
+                        "entity_property": "usage_id",
+                        "property": "usage_id"
+                    },
+                    {
+                        "entity_property": "status",
+                        "property": "status"
+                    },
+                    {
+                        "entity_property": "gender",
+                        "property": "gender"
+                    },
+                    {
+                        "entity_property": "birth_date",
+                        "property": "birth_date",
+                        "datatype": "timestamp"
+                    },
+                    {
+                        "entity_property": "name",
+                        "property": "name"
+                    },
+                    {
+                        "entity_property": "castrate_date",
+                        "property": "castrate_date"
+                    },
+                    {
+                        "entity_property": "tag_date",
+                        "property": "tag_date"
+                    }
+                ]
+            },
+            "outgoing_mapping_config": {
+                "base_uri": "http://data.mimiro.io/cima/cattle/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "uri_value_pattern": "http://data.sample.org/things/{value}"
+                    },
+                    {
+                        "entity_property": "animal_id",
+                        "property": "animal_id"
+                    },
+                    {
+                        "entity_property": "calf_id",
+                        "property": "calf_id"
+                    },
+                    {
+                        "entity_property": "animal_type",
+                        "property": "animal_type"
+                    },
+                    {
+                        "entity_property": "origin_marking",
+                        "property": "origin_marking"
+                    },
+                    {
+                        "entity_property": "cattle_group_id",
+                        "property": "cattle_group_id"
+                    },
+                    {
+                        "entity_property": "ear_tag",
+                        "property": "ear_tag"
+                    },
+                    {
+                        "entity_property": "breed_id",
+                        "property": "breed_id"
+                    },
+                    {
+                        "entity_property": "breed_composition",
+                        "property": "breed_composition"
+                    },
+                    {
+                        "entity_property": "usage_id",
+                        "property": "usage_id"
+                    },
+                    {
+                        "entity_property": "status",
+                        "property": "status"
+                    },
+                    {
+                        "entity_property": "gender",
+                        "property": "gender"
+                    },
+                    {
+                        "entity_property": "birth_date",
+                        "property": "birth_date"
+                    },
+                    {
+                        "entity_property": "name",
+                        "property": "name"
+                    },
+                    {
+                        "entity_property": "castrate_date",
+                        "property": "castrate_date"
+                    },
+                    {
+                        "entity_property": "tag_date",
+                        "property": "tag_date"
+                    },
+                    {
+                        "entity_property": "created_at",
+                        "property": "created_at"
+                    },
+                    {
+                        "entity_property": "created_by",
+                        "property": "created_by"
+                    },
+                    {
+                        "entity_property": "updated_at",
+                        "property": "updated_at"
+                    },
+                    {
+                        "entity_property": "updated_by",
+                        "property": "updated_by"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "products2",
+            "source_config": {
+                "flush_threshold": 5,
+                "since_column" : "Timestamp",
+                "since_table" : "Product",
+                "data_query" : "SELECT * from Product"
+            },
+            "incoming_mapping_config": {
+                "base_uri": "http://data.test.io/newtestnamespace/product2/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "strip_ref_prefix": true
+                    },
+                    {
+                        "entity_property": "Product_Id",
+                        "property": "product_id"
+                    },
+                    {
+                        "entity_property": "ProductPrice",
+                        "property": "productprice"
+                    },
+                    {
+                        "entity_property": "Date",
+                        "property": "date"
+                    },
+                    {
+                        "entity_property": "Reporter",
+                        "property": "reporter"
+                    },
+                    {
+                        "entity_property": "Version",
+                        "property": "version"
+                    }
+                ]
+            },
+            "outgoing_mapping_config": {
+                "base_uri": "http://data.sample.org/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "uri_value_pattern": "http://data.sample.org/things/{value}"
+                    },
+                    {
+                        "entity_property": "product_id",
+                        "property": "product_id"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "customers",
+            "source_config": {
+                "table_name" : "Customer",
+                "since_column" : "last_modified",
+                "entity_column" : "entity"
+            }
+        }
+    ]
+}

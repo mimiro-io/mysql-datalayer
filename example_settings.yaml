@@ -1,0 +1,36 @@
+service:
+  name: "postgresql-datalayer"
+log:
+  level: DEBUG
+server:
+  port: 4951
+
+authorization:
+  middleware: noop #use noop to turn of security locally
+
+token:
+  well:
+    known: https://auth.yoursite.io/jwks/.well-known/jwks.json
+  audience: https://auth.yoursite.io
+  issuer: https://auth.yoursite.io
+  opa:
+    endpoint: http://localhost:8181
+
+#audience.auth0: https://api.yourtokenissuer.io/
+#issuer.auth0: https://yourtokenissuer.auth0.com/
+
+
+config:
+  location: file://resources/default-config.json
+  refresh:
+    interval: "@every 60s"
+
+
+postgres:
+  db:
+    user: norfor_proxy_admin
+    password: aiCai&y1shair6
+dd:
+  agent:
+    host: "127.0.0.1:8125"
+

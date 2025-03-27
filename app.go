@@ -2,30 +2,30 @@ package mysql
 
 import (
 	"context"
-	"github.com/mimiro-io/mysql-datalayer/internal/conf"
-	"github.com/mimiro-io/mysql-datalayer/internal/layers"
-	"github.com/mimiro-io/mysql-datalayer/internal/security"
-	"github.com/mimiro-io/mysql-datalayer/internal/web"
+	conf2 "github.com/mimiro-io/mysql-datalayer/internal/legacy/conf"
+	layers2 "github.com/mimiro-io/mysql-datalayer/internal/legacy/layers"
+	"github.com/mimiro-io/mysql-datalayer/internal/legacy/security"
+	web2 "github.com/mimiro-io/mysql-datalayer/internal/legacy/web"
 	"go.uber.org/fx"
 )
 
 func wire() *fx.App {
 	app := fx.New(
 		fx.Provide(
-			conf.NewEnv,
+			conf2.NewEnv,
 			security.NewTokenProviders,
-			conf.NewConfigurationManager,
-			conf.NewStatsd,
-			conf.NewLogger,
-			web.NewWebServer,
-			web.NewMiddleware,
-			layers.NewLayer,
-			layers.NewPostLayer,
+			conf2.NewConfigurationManager,
+			conf2.NewStatsd,
+			conf2.NewLogger,
+			web2.NewWebServer,
+			web2.NewMiddleware,
+			layers2.NewLayer,
+			layers2.NewPostLayer,
 		),
 		fx.Invoke(
-			web.Register,
-			web.NewDatasetHandler,
-			web.NewPostHandler,
+			web2.Register,
+			web2.NewDatasetHandler,
+			web2.NewPostHandler,
 		),
 	)
 	return app

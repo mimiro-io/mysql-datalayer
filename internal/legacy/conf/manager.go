@@ -4,13 +4,12 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/json"
+	"github.com/mimiro-io/mysql-datalayer/internal/legacy/security"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 	"time"
-
-	"github.com/mimiro-io/mysql-datalayer/internal/security"
 
 	"github.com/bamzi/jobrunner"
 	"go.uber.org/fx"

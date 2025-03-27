@@ -2,11 +2,11 @@ package web
 
 import (
 	"context"
+	"github.com/mimiro-io/mysql-datalayer/internal/legacy/conf"
+	middlewares2 "github.com/mimiro-io/mysql-datalayer/internal/legacy/web/middlewares"
 	"strings"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mimiro-io/mysql-datalayer/internal/conf"
-	"github.com/mimiro-io/mysql-datalayer/internal/web/middlewares"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
@@ -33,14 +33,14 @@ func NewMiddleware(lc fx.Lifecycle, handler *Handler, e *echo.Echo, env *conf.En
 		logger:     setupLogger(handler, skipper),
 		jwt:        setupJWT(env, skipper),
 		recover:    setupRecovery(handler),
-		authorizer: middlewares.Authorize,
+		authorizer: middlewares2.Authorize,
 		handler:    handler,
 		env:        env,
 	}
 
 	if env.Auth.Middleware == "noop" { // don't enable local security if noop is enabled
 		handler.Logger.Infof("WARNING: Setting NoOp Authorizer")
-		mw.authorizer = middlewares.NoOpAuthorizer
+		mw.authorizer = middlewares2.NoOpAuthorizer
 	}
 
 	lc.Append(fx.Hook{
@@ -64,7 +64,7 @@ func (middleware *Middleware) configure(e *echo.Echo) {
 }
 
 func setupJWT(env *conf.Env, skipper func(c echo.Context) bool) echo.MiddlewareFunc {
-	return middlewares.JWTHandler(&middlewares.Auth0Config{
+	return middlewares2.JWTHandler(&middlewares2.Auth0Config{
 		Skipper:       skipper,
 		Audience:      env.Auth.Audience,
 		Issuer:        env.Auth.Issuer,
@@ -75,7 +75,7 @@ func setupJWT(env *conf.Env, skipper func(c echo.Context) bool) echo.MiddlewareF
 }
 
 func setupLogger(handler *Handler, skipper func(c echo.Context) bool) echo.MiddlewareFunc {
-	return middlewares.LoggerFilter(middlewares.LoggerConfig{
+	return middlewares2.LoggerFilter(middlewares2.LoggerConfig{
 		Skipper:      skipper,
 		Logger:       handler.Logger.Desugar(),
 		StatsdClient: handler.StatsDClient,
@@ -83,5 +83,5 @@ func setupLogger(handler *Handler, skipper func(c echo.Context) bool) echo.Middl
 }
 
 func setupRecovery(handler *Handler) echo.MiddlewareFunc {
-	return middlewares.RecoverWithConfig(middlewares.DefaultRecoverConfig, handler.Logger)
+	return middlewares2.RecoverWithConfig(middlewares2.DefaultRecoverConfig, handler.Logger)
 }
