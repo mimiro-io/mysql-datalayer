@@ -268,7 +268,7 @@ func TestDatasetEndpoint(t *testing.T) {
 
 		// get the continuation token
 		nextToken := ec.Continuation.Token
-
+		time.Sleep(2 * time.Second)
 		// do a get with the continuation token
 		res, err = http.Get(layerUrl + "/changes?since=" + nextToken)
 
@@ -302,7 +302,6 @@ func TestDatasetEndpoint(t *testing.T) {
 		// entity graph data model
 		entityParser = egdm.NewEntityParser(egdm.NewNamespaceContext()).WithExpandURIs()
 		ec, err = entityParser.LoadEntityCollection(res.Body)
-
 		if err != nil {
 			t.Fatal(err)
 		}

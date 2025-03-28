@@ -19,10 +19,10 @@
     "props": {
         "ns3:Product_Id": 3096,
         "ns3:ProductPrice": 183,
-        "ns3:Date": "2007-02-16 00:00:00",
+        "ns3:Date": "2007-02-16T00:05:00+01:00",
         "ns3:Id": 1,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2007-09-09 00:00:00",
+        "ns3:Timestamp": "2007-09-09T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -36,10 +36,10 @@
     "props": {
         "ns3:Product_Id": 13003,
         "ns3:ProductPrice": 198,
-        "ns3:Date": "2009-12-09 00:00:00",
+        "ns3:Date": "2009-12-09T00:00:00Z",
         "ns3:Id": 2,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2010-01-05 00:00:00",
+        "ns3:Timestamp": "2010-01-05T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -53,10 +53,10 @@
     "props": {
         "ns3:Product_Id": 679,
         "ns3:ProductPrice": 199,
-        "ns3:Date": "2003-10-29 00:00:00",
+        "ns3:Date": "2003-10-29T00:00:00Z",
         "ns3:Id": 3,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2003-11-07 00:00:00",
+        "ns3:Timestamp": "2003-11-07T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -70,10 +70,10 @@
     "props": {
         "ns3:Product_Id": 10998,
         "ns3:ProductPrice": 195,
-        "ns3:Date": "2006-11-15 00:00:00",
+        "ns3:Date": "2006-11-15T00:00:00Z",
         "ns3:Id": 4,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2006-11-15 00:00:00",
+        "ns3:Timestamp": "2006-11-15T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -87,10 +87,10 @@
     "props": {
         "ns3:Product_Id": 11038,
         "ns3:ProductPrice": 185,
-        "ns3:Date": "2006-11-15 00:00:00",
+        "ns3:Date": "2006-11-15T00:00:00Z",
         "ns3:Id": 5,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2006-11-15 00:00:00",
+        "ns3:Timestamp": "2006-11-15T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -104,10 +104,10 @@
     "props": {
         "ns3:Product_Id": 13008,
         "ns3:ProductPrice": 150,
-        "ns3:Date": "2008-10-22 00:00:00",
+        "ns3:Date": "2008-10-22T00:00:00Z",
         "ns3:Id": 6,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2008-10-22 00:00:00",
+        "ns3:Timestamp": "2008-10-22T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -121,10 +121,10 @@
     "props": {
         "ns3:Product_Id": 11120,
         "ns3:ProductPrice": 182,
-        "ns3:Date": "2008-08-12 00:00:00",
+        "ns3:Date": "2008-08-12T00:00:00Z",
         "ns3:Id": 7,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2008-08-13 00:00:00",
+        "ns3:Timestamp": "2008-08-13T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -138,10 +138,10 @@
     "props": {
         "ns3:Product_Id": 3104,
         "ns3:ProductPrice": 199,
-        "ns3:Date": "2011-02-07 00:00:00",
+        "ns3:Date": "2011-02-07T00:00:00Z",
         "ns3:Id": 8,
         "ns3:Reporter": "3",
-        "ns3:Timestamp": "2011-02-07 00:00:00",
+        "ns3:Timestamp": "2011-02-07T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -155,10 +155,10 @@
     "props": {
         "ns3:Product_Id": 865,
         "ns3:ProductPrice": 187,
-        "ns3:Date": "2004-03-31 00:00:00",
+        "ns3:Date": "2004-03-31T00:00:00Z",
         "ns3:Id": 9,
         "ns3:Reporter": "3",
-        "ns3:Timestamp": "2004-04-01 00:00:00",
+        "ns3:Timestamp": "2004-04-01T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -172,10 +172,10 @@
     "props": {
         "ns3:Product_Id": 13008,
         "ns3:ProductPrice": 158,
-        "ns3:Date": "2008-11-24 00:00:00",
+        "ns3:Date": "2008-11-24T00:00:00Z",
         "ns3:Id": 10,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2008-11-24 00:00:00",
+        "ns3:Timestamp": "2008-11-24T00:00:00Z",
         "ns3:Version": 0
     }
 }

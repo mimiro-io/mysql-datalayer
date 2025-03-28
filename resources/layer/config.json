@@ -40,7 +40,7 @@
                     {
                         "entity_property": "Date",
                         "property": "date",
-                        "data_type": "timestamp"
+                        "datatype": "datetime"
                     },
                     {
                         "entity_property": "Reporter",
@@ -131,7 +131,7 @@
                     {
                         "entity_property": "birth_date",
                         "property": "birth_date",
-                        "datatype": "timestamp"
+                        "datatype": "datetime"
                     },
                     {
                         "entity_property": "name",
@@ -261,7 +261,7 @@
                     {
                         "entity_property": "Date",
                         "property": "date",
-                        "datatype": "timestamp"
+                        "datatype": "datetime"
                     },
                     {
                         "entity_property": "Reporter",

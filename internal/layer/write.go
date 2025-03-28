@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"strings"
-
 	common "github.com/mimiro-io/common-datalayer"
 	egdm "github.com/mimiro-io/entity-graph-data-model"
+	"strings"
+	"time"
 )
 
 func (d *Dataset) FullSync(ctx context.Context, batchInfo common.BatchInfo) (common.DatasetWriter, common.LayerError) {
@@ -48,36 +48,38 @@ func (d *Dataset) newMysqlWriter(ctx context.Context) (*MysqlWriter, common.Laye
 			break
 		}
 	}
-
+	propertyMappings := d.datasetDefinition.IncomingMappingConfig.PropertyMappings
 	sinceColumn, _ := d.datasetDefinition.SourceConfig[SinceColumn].(string)
 
 	return &MysqlWriter{
-		logger:         d.logger,
-		mapper:         mapper,
-		sinceColumn:    sinceColumn,
-		db:             db,
-		ctx:            ctx,
-		table:          tableName,
-		flushThreshold: flushThreshold,
-		appendMode:     d.datasetDefinition.SourceConfig[AppendMode] == true,
-		idColumn:       idColumn,
+		logger:           d.logger,
+		mapper:           mapper,
+		sinceColumn:      sinceColumn,
+		db:               db,
+		ctx:              ctx,
+		table:            tableName,
+		flushThreshold:   flushThreshold,
+		propertyMappings: propertyMappings,
+		appendMode:       d.datasetDefinition.SourceConfig[AppendMode] == true,
+		idColumn:         idColumn,
 	}, nil
 }
 
 type MysqlWriter struct {
-	logger         common.Logger
-	ctx            context.Context
-	mapper         *common.Mapper
-	db             *sql.DB
-	tx             *sql.Tx
-	table          string
-	idColumn       string
-	sinceColumn    string
-	batch          strings.Builder
-	deleteBatch    strings.Builder
-	batchSize      int
-	flushThreshold int
-	appendMode     bool
+	logger           common.Logger
+	ctx              context.Context
+	mapper           *common.Mapper
+	db               *sql.DB
+	tx               *sql.Tx
+	table            string
+	idColumn         string
+	sinceColumn      string
+	batch            strings.Builder
+	deleteBatch      strings.Builder
+	batchSize        int
+	flushThreshold   int
+	appendMode       bool
+	propertyMappings []*common.EntityToItemPropertyMapping
 }
 
 func (o *MysqlWriter) Write(entity *egdm.Entity) common.LayerError {
@@ -99,8 +101,7 @@ func (o *MysqlWriter) Write(entity *egdm.Entity) common.LayerError {
 	}
 	o.deleteBatch.WriteString(o.idColumn)
 	o.deleteBatch.WriteString(" = ")
-	o.deleteBatch.WriteString(sqlVal(item.Map[o.idColumn]))
-
+	o.deleteBatch.WriteString(o.sqlVal(item.Map[o.idColumn], "id"))
 	// if the entity is deleted continue
 	if entity.IsDeleted {
 		return nil
@@ -139,9 +140,21 @@ func (o *MysqlWriter) Close() common.LayerError {
 	return nil
 }
 
-func sqlVal(v any) string {
+func (o *MysqlWriter) sqlVal(v any, colName string) string {
 	switch v.(type) {
 	case string:
+		for i, _ := range o.propertyMappings {
+			if o.propertyMappings[i].Property == colName {
+				if o.propertyMappings[i].Datatype == "datetime" {
+					t, err := time.Parse(time.RFC3339, v.(string))
+					if err != nil {
+						return "NULL" // or handle the error as needed
+					}
+					v = t.Format("2006-01-02 15:04:05")
+					return fmt.Sprintf("'%s'", v)
+				}
+			}
+		}
 		return fmt.Sprintf("'%s'", v)
 	case nil:
 		return "NULL"
@@ -162,7 +175,6 @@ func (o *MysqlWriter) flush() error {
 	stmt := o.batch.String()
 	stmt = "BEGIN;\n\n" + delstmt + ";\n" + stmt
 	stmt += ";\nCOMMIT;"
-	//altStmt := delstmt + ";" + stmt + ";"
 	o.logger.Debug(stmt)
 
 	_, err := o.tx.ExecContext(o.ctx, stmt)
@@ -211,10 +223,11 @@ func (o *MysqlWriter) insert(item *RowItem) error {
 	// Build a single row of values in parentheses
 	o.batch.WriteString(" (")
 	for i, val := range item.Values {
+		colName := item.Columns[i]
 		if i > 0 {
 			o.batch.WriteString(", ")
 		}
-		o.batch.WriteString(sqlVal(val))
+		o.batch.WriteString(o.sqlVal(val, colName))
 	}
 
 	if o.sinceColumn != "" {
