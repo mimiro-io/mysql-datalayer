@@ -81,6 +81,25 @@ See [here](./test_integration/integration-test-config.json) for a full example c
 
 If the dataset is configured with a `since_table`, the layer will use this table to store the watermark in incremental reads.
 
+### property mappings
+
+The `property_mappings` section is used if there is a specific data type in the table we write to for example
+"datetime" is handled differently in MySql than in most other databases. The format YYYY-MM-DDTHH:MM:SSZ is not supported.
+We need to format these strings to look like this "YYYY-MM-DD HH:MM:SS" to be able to write them to the database.
+Similarily with time zones, you will need to use the data type "timestamp" in MySql to store the time zone information.
+
+```json
+"property_mappings":[
+    {
+    "entity_property": "ProductPrice",
+    "property": "productprice"
+    },
+    {
+    "entity_property": "Date",
+    "property": "date",
+    "datatype": "datetime"
+    }]
+```
 
 ## Running
 

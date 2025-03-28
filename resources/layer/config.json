@@ -2,7 +2,7 @@
     "layer_config": {
         "port": "17777",
         "service_name": "mysql_service",
-        "log_level": "DEBUG",
+        "log_level": "INFO",
         "log_format": "json",
         "config_refresh_interval": "200s"
     },
@@ -19,7 +19,7 @@
             "source_config": {
                 "table_name" : "product",
                 "since_column" : "Timestamp",
-                "flush_threshold": 5
+                "flush_threshold": 1000
             },
             "incoming_mapping_config": {
                 "base_uri": "http://data.test.io/newtestnamespace/product/",

@@ -1,4 +1,9 @@
-FROM golang:1.22.2 as builder
+FROM golang:1.23-alpine3.21 AS builder
+
+# Install git + SSL ca certificates.
+# Git is required for fetching the dependencies.
+# Ca-certificates is required to call HTTPS endpoints.
+RUN apk update && apk add --no-cache git gcc musl-dev ca-certificates tzdata && update-ca-certificates
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -9,8 +14,8 @@ COPY go.mod go.sum ./
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN go mod download
 
-
-FROM builder as build
+#####################################################################################################
+FROM builder AS build
 
 # Copy the source from the current directory to the Working Directory inside the container
 COPY cmd ./cmd
@@ -19,19 +24,22 @@ COPY resources ./resources
 COPY *.go ./
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o server cmd/mysql/main.go
+RUN go build -a -o server cmd/mysql/main.go
+RUN go build -a -o mysql-layer cmd/layer/main.go
 
+# tests
 RUN go vet ./...
-RUN go test ./... -v
 
-
+#####################################################################################################
 FROM alpine:latest
-
-RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /app/server .
+COPY --from=build /app/mysql-layer .
+
 ADD .env .
 ADD resources/default-config.json resources/
 
