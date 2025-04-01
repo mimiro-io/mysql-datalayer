@@ -1,8 +1,6 @@
 module github.com/mimiro-io/mysql-datalayer
 
-go 1.22.5
-
-toolchain go1.23.0
+go 1.23.0
 
 require (
 	github.com/DataDog/datadog-go/v5 v5.5.0

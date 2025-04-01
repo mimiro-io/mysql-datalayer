@@ -234,8 +234,8 @@ func TestDatasetEndpoint(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if len(ec.Entities) != 0 {
-			t.Fatalf("Expected 0 entity, got %d", len(ec.Entities))
+		if len(ec.Entities) != 9 {
+			t.Fatalf("Expected 9 entity, got %d", len(ec.Entities))
 		}
 	})
 

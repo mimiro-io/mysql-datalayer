@@ -13,6 +13,7 @@ const (
 	FlushThreshold = "flush_threshold"
 	AppendMode     = "append_mode"
 	SinceColumn    = "since_column"
+	SincePrecision = "since_precision"
 	EntityColumn   = "entity_column"
 	SinceTable     = "since_table"
 	DataQuery      = "data_query"

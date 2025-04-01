@@ -50,11 +50,13 @@ func (d *Dataset) newMysqlWriter(ctx context.Context) (*MysqlWriter, common.Laye
 	}
 	propertyMappings := d.datasetDefinition.IncomingMappingConfig.PropertyMappings
 	sinceColumn, _ := d.datasetDefinition.SourceConfig[SinceColumn].(string)
+	sincePrecision, _ := d.datasetDefinition.SourceConfig[SincePrecision].(string)
 
 	return &MysqlWriter{
 		logger:           d.logger,
 		mapper:           mapper,
 		sinceColumn:      sinceColumn,
+		sincePrecision:   sincePrecision,
 		db:               db,
 		ctx:              ctx,
 		table:            tableName,
@@ -74,6 +76,7 @@ type MysqlWriter struct {
 	table            string
 	idColumn         string
 	sinceColumn      string
+	sincePrecision   string
 	batch            strings.Builder
 	deleteBatch      strings.Builder
 	batchSize        int
@@ -236,9 +239,16 @@ func (o *MysqlWriter) insert(item *RowItem) error {
 		}
 		o.batch.WriteString(o.sqlVal(val, colName))
 	}
-
+	var sincePrecision string
+	if o.sincePrecision != "" {
+		sincePrecision = o.sincePrecision
+	} else {
+		sincePrecision = "6"
+	}
 	if o.sinceColumn != "" {
-		o.batch.WriteString(", NOW()")
+		o.batch.WriteString((", NOW("))
+		o.batch.WriteString(sincePrecision)
+		o.batch.WriteString(")")
 	}
 
 	o.batch.WriteString(")")

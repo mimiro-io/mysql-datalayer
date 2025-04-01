@@ -85,14 +85,14 @@ func (d *Dataset) newIterator(mapper *cdl.Mapper, since string, limit int) (*dbI
 			return nil, ErrQuery(err)
 		}
 
-		newSince := maxSince.Time.Format("2006-01-02 15:04:05.012345")
+		newSince := maxSince.Time.Format("2006-01-02 15:04:05.000000")
 		nextToken = base64.URLEncoding.EncodeToString([]byte(newSince))
 	}
 
 	// convert maxSince to string
 	var maxSinceStr string
 	if maxSince.Valid {
-		maxSinceStr = maxSince.Time.Format("2006-01-02 15:04:05.012345")
+		maxSinceStr = maxSince.Time.Format("2006-01-02 15:04:05.000000")
 	}
 
 	// build the query

@@ -53,6 +53,7 @@ The mysql specific options in a dataset configuration are these `source` options
     "flush_threshold": 1000, // max number of rows to buffer before writing to db. optional
     "since_column": "my_column" // optional, column to use as a watermark for incremental reads
     "since_table": "table_name" // optional, table to use as a watermark for incremental reads
+    "since_precision": "string value between 1-6" // optional precision for the since_column value, default 6
   }
 }
 ```
@@ -80,6 +81,11 @@ See [here](./test_integration/integration-test-config.json) for a full example c
 ### since table
 
 If the dataset is configured with a `since_table`, the layer will use this table to store the watermark in incremental reads.
+
+### since precision
+
+MySQL standard for datetime fields is without precision. If you have a datetime field to use as timestamp we
+highly recommend to set the column to DATETIME(6) for maximal precision.
 
 ### property mappings
 

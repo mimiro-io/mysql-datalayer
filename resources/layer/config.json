@@ -18,7 +18,9 @@
             "name": "products",
             "source_config": {
                 "table_name" : "product",
-                "since_column" : "timestamp",
+                "since_column" : "Timestamp",
+                "since_table" : "product",
+                "since_precision": "4",
                 "flush_threshold": 1000
             },
             "incoming_mapping_config": {
@@ -247,8 +249,8 @@
             "name": "products2",
             "source_config": {
                 "flush_threshold": 5,
-                "since_column" : "timestamp",
-                "since_table" : "product",
+                "table_name" : "product",
+                "since_column" : "Timestamp",
                 "data_query" : "SELECT * from product"
             },
             "incoming_mapping_config": {
