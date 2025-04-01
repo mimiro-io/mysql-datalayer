@@ -45,14 +45,14 @@ In addition, the Mysql data layer requires a `system_config` section to configur
 To add datasets (tables) to the configuration, refer to the [common-datalayer configuration](https://github.com/mimiro-io/common-datalayer?tab=readme-ov-file#data-layer-configuration).
 The mysql specific options in a dataset configuration are these `source` options:
 
-```json
+```json5
 {
   "source": {
     "table_name": "name of the mapped table", // required
     "data_query": "SELECT * FROM table_name", // optional, query to fetch data from the table
     "flush_threshold": 1000, // max number of rows to buffer before writing to db. optional
-    "since_column": "my_column" // optional, column to use as a watermark for incremental reads
-    "since_table": "table_name" // optional, table to use as a watermark for incremental reads
+    "since_column": "my_column", // optional, column to use as a watermark for incremental reads
+    "since_table": "table_name", // optional, table to use as a watermark for incremental reads
     "since_precision": "string value between 1-6" // optional precision for the since_column value, default 6
   }
 }
