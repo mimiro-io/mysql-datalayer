@@ -19,10 +19,12 @@
     "props": {
         "ns3:Product_Id": 3096,
         "ns3:ProductPrice": 183,
-        "ns3:Date": "2007-02-16T00:05:00+01:00",
+        "ns3:Date": "2007-02-16T00:05:00Z",
         "ns3:Id": 1,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2007-09-09T00:00:00Z",
+        "ns3:Timestamp": "2007-09-09T00:00:00.023Z+01:00",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -39,7 +41,9 @@
         "ns3:Date": "2009-12-09T00:00:00Z",
         "ns3:Id": 2,
         "ns3:Reporter": "4",
-        "ns3:Timestamp": "2010-01-05T00:00:00Z",
+        "ns3:Timestamp": "2010-01-05T00:00:00.024Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -57,6 +61,8 @@
         "ns3:Id": 3,
         "ns3:Reporter": "4",
         "ns3:Timestamp": "2003-11-07T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -74,6 +80,8 @@
         "ns3:Id": 4,
         "ns3:Reporter": "4",
         "ns3:Timestamp": "2006-11-15T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -91,6 +99,8 @@
         "ns3:Id": 5,
         "ns3:Reporter": "4",
         "ns3:Timestamp": "2006-11-15T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -108,6 +118,8 @@
         "ns3:Id": 6,
         "ns3:Reporter": "4",
         "ns3:Timestamp": "2008-10-22T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -125,6 +137,8 @@
         "ns3:Id": 7,
         "ns3:Reporter": "4",
         "ns3:Timestamp": "2008-08-13T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -142,6 +156,8 @@
         "ns3:Id": 8,
         "ns3:Reporter": "3",
         "ns3:Timestamp": "2011-02-07T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -159,6 +175,8 @@
         "ns3:Id": 9,
         "ns3:Reporter": "3",
         "ns3:Timestamp": "2004-04-01T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }
@@ -176,6 +194,8 @@
         "ns3:Id": 10,
         "ns3:Reporter": "4",
         "ns3:Timestamp": "2008-11-24T00:00:00Z",
+        "ns3:DateTest": "2008-11-24",
+        "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
 }

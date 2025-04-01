@@ -62,8 +62,8 @@ func setup(t *testing.T) testcontainers.Container {
 		t.Error(err)
 	}
 	_, err = conn.ExecContext(ctx, "CREATE TABLE IF NOT EXISTS product "+
-		"(id VARCHAR(50) PRIMARY KEY, product_id INT, productprice INT, date TIMESTAMP, "+
-		"reporter VARCHAR(15), timestamp TIMESTAMP, version INT);")
+		"(id VARCHAR(50) PRIMARY KEY, product_id INT, productprice INT, date DATETIME, "+
+		"reporter VARCHAR(15), timestamp DATETIME(6), version INT, date_test DATE, datetime_test DATETIME);")
 	if err != nil {
 		t.Log(err)
 	}
@@ -268,8 +268,8 @@ func TestDatasetEndpoint(t *testing.T) {
 
 		// get the continuation token
 		nextToken := ec.Continuation.Token
-		time.Sleep(2 * time.Second)
 		// do a get with the continuation token
+
 		res, err = http.Get(layerUrl + "/changes?since=" + nextToken)
 
 		if err != nil {

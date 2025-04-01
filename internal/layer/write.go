@@ -157,7 +157,7 @@ func (o *MysqlWriter) sqlVal(v any, colName string) string {
 					if err != nil {
 						return "NULL" // or handle the error as needed
 					}
-					v = t.Format("2006-01-02 15:04:05 -0700")
+					v = t.Format("2006-01-02 15:04:05-0700")
 					return fmt.Sprintf("'%s'", v)
 				}
 			}
