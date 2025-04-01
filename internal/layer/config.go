@@ -49,8 +49,10 @@ func (dl *MysqlDatalayer) UpdateConfiguration(config *cdl.Config) cdl.LayerError
 	}
 
 	// update database connection
-	dl.db, _ = newMysqlDB(config)
-
+	dl.db, err = newMysqlDB(config)
+	if err != nil {
+		return cdl.Err(fmt.Errorf("could not create new database connection because %s", err.Error()), cdl.LayerErrorInternal)
+	}
 	existingDatasets := map[string]bool{}
 	// update existing datasets
 	for k, v := range dl.datasets {
