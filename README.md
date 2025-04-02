@@ -114,7 +114,7 @@ Similarily with time zones, you will need to use the data type "timestamp" in My
 From source:
 
 ```bash
-DATALAYER_CONFIG_PATH=/path/to/config.json go run ./cmd/mysql-datalayer/main.go
+DATALAYER_CONFIG_PATH=/path/to/config.json go run ./cmd/layer/main.go
 ```
 
 ### run the docker container
@@ -123,7 +123,7 @@ DATALAYER_CONFIG_PATH=/path/to/config.json go run ./cmd/mysql-datalayer/main.go
 docker run \
   -p 8080:8080 \
   -v /path/to/config.json:./config/config.json \
-  mimiro/mysql-datalayer mysql-datalayer
+  mimiro/mysql-datalayer ./mysql-layer
 ```
 
 Note that most top level configuration parameters can be provided by environment
@@ -162,7 +162,7 @@ docker run \
   -e MYSQL_PASSWORD=testpassword \
   -e DATALAYER_CONFIG_PATH=/etc/config.json \
   -v /path/to/config.json:/etc/config.json \
-  mimiro/mysql-datalayer mysql-datalayer
+  mimiro/mysql-datalayer ./mysql-layer
 ```
 
 # Legacy Datalayer
