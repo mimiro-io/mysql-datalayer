@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/DataDog/datadog-go/v5/statsd"
 	"github.com/labstack/echo/v4"
-	"github.com/mimiro-io/mysql-datalayer/internal/conf"
+	"github.com/mimiro-io/mysql-datalayer/internal/legacy/conf"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"net/http"

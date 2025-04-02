@@ -1,59 +1,112 @@
 {
-  "id": "test-import",
-  "databaseServer": "localhost",
-  "baseUri": "http://data.test.io/newtestnamespace/",
-  "database": "test_database",
-  "port": "5432",
-  "schema": "",
-  "baseNameSpace": "http://data.test.io/newtestnamespace/",
-  "tableMappings": [
-    {
-      "tableName": "product",
-      "query": "SELECT p.product_id AS productId, order_id FROM Product %s;",
-      "nameSpace": "product",
-      "entityIdConstructor": "product/%s",
-      "types": [
-        "http://data.test.io/newtestnamespace/Product"
-      ],
-      "columnMappings": [
+    "id": "test-import",
+    "databaseServer": "localhost",
+    "baseUri": "http://data.test.io/testnamespace/",
+    "database": "testdb",
+    "port": "3306",
+    "username": "root",
+    "password": "password",
+    "schema": "mysql",
+    "baseNameSpace": "http://data.test.io/newtestnamespace/",
+    "tableMappings": [
         {
-          "fieldName": "productId",
-          "isIdColumn": true
+            "tableName": "Product",
+            "query": "SELECT p.product_id AS productId, p.date AS date FROM product p %s;",
+            "nameSpace": "product",
+            "entityIdConstructor": "product/%s",
+            "types": [
+                "http://data.test.io/newtestnamespace/Product"
+            ],
+            "columnMappings": [
+                {
+                    "fieldName": "productid",
+                    "isIdColumn": true
+                },
+                {
+                    "fieldName": "date"
+                }
+            ]
         },
         {
-          "fieldName": "order_id",
-          "isReference": true,
-          "referenceTemplate": "http://data.test.io/newtestnamespace/order/%s"
-        }
-      ]
-    },
-    {
-      "tableName": "order",
-      "nameSpace": "order",
-      "entityIdConstructor": "order/%s",
-      "types": [
-        "http://data.test.io/newtestnamespace/Order"
-      ],
-      "columnMappings": [
+            "tableName": "order",
+            "nameSpace": "order",
+            "entityIdConstructor": "order/%s",
+            "types": [
+                "http://data.test.io/newtestnamespace/Order"
+            ],
+            "columnMappings": [
+                {
+                    "fieldName": "orderId",
+                    "isIdColumn": true
+                }
+            ]
+        },
         {
-          "fieldName": "order_id",
-          "isIdColumn": true
+            "tableName": "customer",
+            "nameSpace": "customer",
+            "entityIdConstructor": "customer/%s",
+            "types": [
+                "http://data.test.io/newtestnamespace/Customer"
+            ],
+            "columnMappings": [
+                {
+                    "fieldName": "customerId",
+                    "isIdColumn": true
+                }
+            ]
         }
-      ]
-    },
-    {
-      "tableName": "customer",
-      "nameSpace": "customer",
-      "entityIdConstructor": "customer/%s",
-      "types": [
-        "http://data.test.io/newtestnamespace/Customer"
-      ],
-      "columnMappings": [
+    ],
+    "postMappings": [
         {
-          "fieldName": "customer_id",
-          "isIdColumn": true
+            "datasetName": "Product",
+            "tableName": "product",
+            "query": "INSERT INTO product (id, product_id, productprice, date, reporter, timestamp, version) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id= VALUES(id), product_id=VALUES(product_id), productprice=VALUES(productprice), date=VALUES(date), reporter=VALUES(reporter), timestamp=VALUES(timestamp), version=VALUES(version);",
+
+            "config": {
+                "databaseServer": "localhost",
+                "database": "testdb",
+                "port": "3306",
+                "schema": "mysql",
+
+                "user": {
+                    "type": "direct",
+                    "key": "root"
+                },
+                "password": {
+                    "type": "direct",
+                    "key": "password"
+                }
+            },
+            "fieldMappings": [
+                {
+                    "fieldName": "Id",
+                    "order": 1
+                },
+                {
+                    "fieldName": "Product_Id",
+                    "order": 2
+                },
+                {
+                    "fieldName": "ProductPrice",
+                    "order": 3
+                },
+                {
+                    "fieldName": "Date",
+                    "order": 4
+                },
+                {
+                    "fieldName": "Reporter",
+                    "order": 5
+                },
+                {
+                    "fieldName": "Timestamp",
+                    "order": 6
+                },
+                {
+                    "fieldName": "Version",
+                    "order": 7
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

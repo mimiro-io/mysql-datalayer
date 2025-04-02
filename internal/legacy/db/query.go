@@ -3,7 +3,7 @@ package db
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/mimiro-io/mysql-datalayer/internal/conf"
+	"github.com/mimiro-io/mysql-datalayer/internal/legacy/conf"
 
 	"time"
 )

@@ -2,7 +2,7 @@ package conf
 
 import (
 	"fmt"
-	"github.com/mimiro-io/mysql-datalayer/internal/security"
+	"github.com/mimiro-io/mysql-datalayer/internal/legacy/security"
 	"go.uber.org/zap"
 	"net/http"
 	"net/http/httptest"

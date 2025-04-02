@@ -1,37 +1,182 @@
 [
-  {
-    "id": "@context",
-    "namespaces": {
-      "ns3": "http://data.test.io/users/",
-      "ns4": "http://data.test.io/workplace/"
+    {
+        "id": "@context",
+        "namespaces": {
+            "ns0": "http://data.test.io/core/dataset/",
+            "ns1": "http://data.test.io/core/",
+            "ns2": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "ns3": "http://data.test.io/newtestnamespace/product/",
+            "ns4": "http://data.test.io/newtestnamespace/order/"
+        }
     }
-  },
-  {
+,{
     "id": "ns3:1",
     "recorded": 1616659529376358912,
     "deleted": true,
     "refs": {
-      "ns3:WorkId": "ns4:3096"
+        "ns3:Product_Id": "ns4:3096"
     },
     "props": {
-      "ns3:Id": "1",
-      "ns3:Firstname": "Hank",
-      "ns3:Surname": "The Tank",
-      "ns3:Timestamp": "2007-02-16 00:00:00"
+        "ns3:Product_Id": 3096,
+        "ns3:ProductPrice": 183,
+        "ns3:Date": "2007-02-16T00:00:00Z",
+        "ns3:Id": 1,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2007-09-09T00:00:00Z",
+        "ns3:Version": 0
     }
-  },
-  {
+}
+,{
     "id": "ns3:2",
-    "recorded": 1616659529376358913,
+    "recorded": 1616659529376358912,
     "deleted": false,
     "refs": {
-      "ns3:WorkId": "ns4:13003"
+        "ns3:Product_Id": "ns4:13003"
     },
     "props": {
-      "ns3:Id": "2",
-      "ns3:Firstname": "Frank",
-      "ns3:Surname": "The Hank",
-      "ns3:Timestamp": "2007-02-17 00:00:00"
+        "ns3:Product_Id": 13003,
+        "ns3:ProductPrice": 198,
+        "ns3:Date": "2009-12-09T00:00:00Z",
+        "ns3:Id": 2,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2010-01-05T00:00:00Z",
+        "ns3:Version": 0
     }
-  }
+}
+,{
+    "id": "ns3:3",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:679"
+    },
+    "props": {
+        "ns3:Product_Id": 679,
+        "ns3:ProductPrice": 199,
+        "ns3:Date": "2003-10-29T00:00:00Z",
+        "ns3:Id": 3,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2003-11-07T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
+,{
+    "id": "ns3:4",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:10998"
+    },
+    "props": {
+        "ns3:Product_Id": 10998,
+        "ns3:ProductPrice": 195,
+        "ns3:Date": "2006-11-15T00:00:00Z",
+        "ns3:Id": 4,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2006-11-15T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
+,{
+    "id": "ns3:5",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:11038"
+    },
+    "props": {
+        "ns3:Product_Id": 11038,
+        "ns3:ProductPrice": 185,
+        "ns3:Date": "2006-11-15T00:00:00Z",
+        "ns3:Id": 5,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2006-11-15T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
+,{
+    "id": "ns3:6",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:13008"
+    },
+    "props": {
+        "ns3:Product_Id": 13008,
+        "ns3:ProductPrice": 150,
+        "ns3:Date": "2008-10-22T00:00:00Z",
+        "ns3:Id": 6,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2008-10-22T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
+,{
+    "id": "ns3:7",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:11120"
+    },
+    "props": {
+        "ns3:Product_Id": 11120,
+        "ns3:ProductPrice": 182,
+        "ns3:Date": "2008-08-12T00:00:00Z",
+        "ns3:Id": 7,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2008-08-13T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
+,{
+    "id": "ns3:8",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:3104"
+    },
+    "props": {
+        "ns3:Product_Id": 3104,
+        "ns3:ProductPrice": 199,
+        "ns3:Date": "2011-02-07T00:00:00Z",
+        "ns3:Id": 8,
+        "ns3:Reporter": "3",
+        "ns3:Timestamp": "2011-02-07T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
+,{
+    "id": "ns3:9",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:865"
+    },
+    "props": {
+        "ns3:Product_Id": 865,
+        "ns3:ProductPrice": 187,
+        "ns3:Date": "2004-03-31T00:00:00Z",
+        "ns3:Id": 9,
+        "ns3:Reporter": "3",
+        "ns3:Timestamp": "2004-04-01T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
+,{
+    "id": "ns3:10",
+    "recorded": 1616659529376358912,
+    "deleted": false,
+    "refs": {
+        "ns3:Product_Id": "ns4:13008"
+    },
+    "props": {
+        "ns3:Product_Id": 13008,
+        "ns3:ProductPrice": 158,
+        "ns3:Date": "2008-11-24T00:00:00Z",
+        "ns3:Id": 10,
+        "ns3:Reporter": "4",
+        "ns3:Timestamp": "2008-11-24T00:00:00Z",
+        "ns3:Version": 0
+    }
+}
 ]

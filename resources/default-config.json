@@ -1,10 +1,80 @@
 {
-    "databaseServer" : "",
-    "baseUri" : "",
-    "database" : "",
-    "port" : "1433",
-    "schema" : "",
-    "tableMappings" : [
+    "id": "norfor-proxy",
+    "type": "content",
+    "databaseServer": "openfarm-aurora-cluster-dev.cluster-cwpuyjdoulob.eu-west-1.rds.amazonaws.com",
+    "baseUri": "http://data.mimiro.io/norfor-proxy/",
+    "database": "norfor_proxy",
+    "port": "3306",
+    "baseNameSpace": "http://data.mimiro.io/norfor-proxy/",
+    "tableMappings": [
+        {
+            "tableName": "TESTfeeding_optimization_norfor_result",
+            "nameSpace": "TESTfeeding-optimization-norfor-result",
+            "types": [
+                "http://data.mimiro.io/norfor-proxy/FeedingOptimizationNorforResult"
+            ],
+            "columnMappings": [
+                {
+                    "idTemplate": "http://data.mimiro.io/norfor-proxy/feeding-optimization-norfor-result/%s",
+                    "fieldName": "id",
+                    "isIdColumn": true
+                },
+                {
+                    "fieldName": "client_data",
+                    "isEntity": true,
+                    "columnMappings": [
+                        {
+                            "fieldName": "feeds",
+                            "isEntity": true,
+                            "columnMappings": [
+                                {
+                                    "fieldName": "feedStuffId",
+                                    "isIdColumn": true,
+                                    "idTemplate": "http://data.mimiro.io/norfor-proxy/feed-stuff/%s"
+                                },
+                                {
+                                    "fieldName": "lactations",
+                                    "isEntity": true,
+                                    "columnMappings": [
+                                        {
+                                            "fieldName": "ecm",
+                                            "isIdColumn": true,
+                                            "idTemplate": "http://data.mimiro.io/norfor-proxy/lactation/%s"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldName": "generalParameters",
+                                    "isEntity": true,
+                                    "columnMappings": [
+                                        {
+                                            "fieldName": "norforId",
+                                            "isIdColumn": true,
+                                            "idTemplate": "http://data.mimiro.io/norfor-proxy/parameter/%s"
+                                        }
+                                    ]
+                                }
+                                    ]
+                                }
+                            ]
+                        }
+                    ] },
+        {
+            "tableName": "feeding_optimization_norfor_result",
+            "query": "SELECT * FROM feeding_optimization_norfor_result, CAST(client_data as text) as client_data, CAST(calc_recommendation_req_body as text) as calc_recommendation_req_body, CAST(calc_recommendation_res_body as text) as calc_recommendation_res_body, CAST(calc_recommendation_error as text) as calc_recommendation_error, CAST(optimize_rations_req_body as text) as optimize_rations_req_body, CAST(optimize_rations_res_body as text) as optimize_rations_res_body, CAST(optimize_rations_error as text) as optimize_rations_error %s",
+            "nameSpace": "feeding-optimization-norfor-result",
+            "types": [
+                "http://data.mimiro.io/norfor-proxy/FeedingOptimizationNorforResult"
+            ],
+        "columnMappings": [
+            {
+                "idTemplate": "http://data.mimiro.io/norfor-proxy/feeding-optimization-norfor-result/%s",
+                "fieldName": "id",
+                "isIdColumn": true
+            }
+        ]}
 
-    ]
-}
+            ]
+        }
+
+

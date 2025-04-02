@@ -7,9 +7,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	conf2 "github.com/mimiro-io/mysql-datalayer/internal/legacy/conf"
+	"github.com/mimiro-io/mysql-datalayer/internal/legacy/db"
 
-	"github.com/mimiro-io/mysql-datalayer/internal/conf"
-	"github.com/mimiro-io/mysql-datalayer/internal/db"
 	"go.uber.org/fx"
 	"net/url"
 	"reflect"
@@ -22,7 +22,7 @@ import (
 )
 
 type Layer struct {
-	cmgr   *conf.ConfigurationManager
+	cmgr   *conf2.ConfigurationManager
 	logger *zap.SugaredLogger
 	Repo   *Repository //exported because it needs to deferred from main
 }
@@ -30,7 +30,7 @@ type Layer struct {
 type Repository struct {
 	DB       *sql.DB
 	ctx      context.Context
-	tableDef *conf.TableMapping
+	tableDef *conf2.TableMapping
 	digest   [16]byte
 }
 
@@ -42,7 +42,7 @@ type DatasetRequest struct {
 
 const jsonNull = "null"
 
-func NewLayer(lc fx.Lifecycle, cmgr *conf.ConfigurationManager, env *conf.Env) *Layer {
+func NewLayer(lc fx.Lifecycle, cmgr *conf2.ConfigurationManager, env *conf2.Env) *Layer {
 	layer := &Layer{}
 	layer.cmgr = cmgr
 	layer.logger = env.Logger.Named("layer")
@@ -78,7 +78,7 @@ func (l *Layer) GetDatasetNames() []string {
 	return names
 }
 
-func (l *Layer) GetTableDefinition(datasetName string) *conf.TableMapping {
+func (l *Layer) GetTableDefinition(datasetName string) *conf2.TableMapping {
 	for _, table := range l.cmgr.Datalayer.TableMappings {
 		if table.TableName == datasetName {
 			return table
@@ -152,7 +152,7 @@ func (l *Layer) ChangeSet(request db.DatasetRequest, callBack func(*Entity)) err
 	colTypes, _ := rows.ColumnTypes()
 
 	// set up the row interface from the returned types
-	nullableRowData := buildRowType(cols, colTypes)
+	nullableRowData := l.BuildRowType(cols, colTypes)
 
 	for rows.Next() {
 		err = rows.Scan(nullableRowData...)
@@ -216,7 +216,7 @@ func (b *HexNullBool) Scan(src interface{}) error {
 	return nil
 }
 
-func buildRowType(cols []string, colTypes []*sql.ColumnType) []interface{} {
+func (l *Layer) BuildRowType(cols []string, colTypes []*sql.ColumnType) []interface{} {
 	nullableRowData := make([]interface{}, len(cols))
 	for i := range cols {
 		colDef := colTypes[i]
@@ -286,8 +286,8 @@ func (l *Layer) connect() (*sql.DB, error) {
 }
 
 // mapColumns remaps the ColumnMapping into Column
-func mapColumns(columns []*conf.ColumnMapping) map[string]*conf.ColumnMapping {
-	cms := make(map[string]*conf.ColumnMapping)
+func mapColumns(columns []*conf2.ColumnMapping) map[string]*conf2.ColumnMapping {
+	cms := make(map[string]*conf2.ColumnMapping)
 
 	for _, cm := range columns {
 		cms[cm.FieldName] = cm
@@ -296,7 +296,7 @@ func mapColumns(columns []*conf.ColumnMapping) map[string]*conf.ColumnMapping {
 
 }
 
-func (l *Layer) toEntity(rowType []interface{}, cols []string, colTypes []*sql.ColumnType, tableDef *conf.TableMapping) *Entity {
+func (l *Layer) toEntity(rowType []interface{}, cols []string, colTypes []*sql.ColumnType, tableDef *conf2.TableMapping) *Entity {
 	entity := NewEntity()
 
 	for i, raw := range rowType {
@@ -444,7 +444,7 @@ func toInt64(payload sql.RawBytes) (int64, error) {
 	return i, nil
 }
 
-func ignoreColumn(column string, tableDef *conf.TableMapping) bool {
+func ignoreColumn(column string, tableDef *conf2.TableMapping) bool {
 
 	if tableDef.CDCEnabled && strings.HasPrefix(column, "__$") {
 		return true

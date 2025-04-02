@@ -3,23 +3,23 @@ package web
 import (
 	"context"
 	"errors"
+	layers2 "github.com/mimiro-io/mysql-datalayer/internal/legacy/layers"
 	"io"
 	"net/http"
 	"net/url"
 
 	"github.com/bcicen/jstream"
 	"github.com/labstack/echo/v4"
-	"github.com/mimiro-io/mysql-datalayer/internal/layers"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
 
 type postHandler struct {
 	logger    *zap.SugaredLogger
-	postLayer *layers.PostLayer
+	postLayer *layers2.PostLayer
 }
 
-func NewPostHandler(lc fx.Lifecycle, e *echo.Echo, mw *Middleware, logger *zap.SugaredLogger, layer *layers.PostLayer) {
+func NewPostHandler(lc fx.Lifecycle, e *echo.Echo, mw *Middleware, logger *zap.SugaredLogger, layer *layers2.PostLayer) {
 	log := logger.Named("web")
 
 	handler := &postHandler{
@@ -46,7 +46,7 @@ func (handler *postHandler) postHandler(c echo.Context) error {
 	batchSize := 1000
 	read := 0
 
-	entities := make([]*layers.Entity, 0) //why 0?
+	entities := make([]*layers2.Entity, 0) //why 0?
 
 	isFirst := true
 
@@ -64,7 +64,7 @@ func (handler *postHandler) postHandler(c echo.Context) error {
 					handler.logger.Error(err)
 					return err
 				}
-				entities = make([]*layers.Entity, 0)
+				entities = make([]*layers2.Entity, 0)
 			}
 		}
 
@@ -104,8 +104,8 @@ func parseStream(reader io.Reader, emitEntity func(value *jstream.MetaValue) err
 	return nil
 }
 
-func asEntity(value *jstream.MetaValue) *layers.Entity {
-	entity := layers.NewEntity()
+func asEntity(value *jstream.MetaValue) *layers2.Entity {
+	entity := layers2.NewEntity()
 	raw := value.Value.(map[string]interface{})
 
 	entity.ID = raw["id"].(string)
