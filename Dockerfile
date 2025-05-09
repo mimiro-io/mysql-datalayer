@@ -24,13 +24,13 @@ RUN go vet ./...
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
-COPY --from=build /app/server /
-COPY --from=build /app/mysql-layer /
+COPY --from=build /app/server .
+COPY --from=build /app/mysql-layer .
 
-ADD .env /
-ADD resources/default-config.json /resources/
+ADD .env .
+ADD resources/default-config.json resources/
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
 
-CMD ["/server"]
+CMD ["./server"]
