@@ -47,7 +47,7 @@ The mysql specific options in a dataset configuration are these `source` options
 
 ```json5
 {
-  "source": {
+  "source_config": {
     "table_name": "name of the mapped table", // required
     "data_query": "SELECT * FROM table_name", // optional, query to fetch data from the table
     "flush_threshold": 1000, // max number of rows to buffer before writing to db. optional
@@ -114,7 +114,7 @@ Similarily with time zones, you will need to use the data type "timestamp" in My
 From source:
 
 ```bash
-DATALAYER_CONFIG_PATH=/path/to/config.json go run ./cmd/layer/main.go
+DATALAYER_CONFIG_PATH=/path/to/configfolder/ go run ./cmd/layer/main.go
 ```
 
 ### run the docker container
@@ -122,7 +122,7 @@ DATALAYER_CONFIG_PATH=/path/to/config.json go run ./cmd/layer/main.go
 ```bash
 docker run \
   -p 8080:8080 \
-  -v /path/to/config.json:./config/config.json \
+  -v /path/to/configfolder/:./configfolder \
   mimiro/mysql-datalayer ./mysql-layer
 ```
 
@@ -157,11 +157,11 @@ docker run \
   -e config_refresh_interval=1h \
   -e MYSQL_HOSTNAME=localhost \
   -e MYSQL_PORT=3306 \
-  -e MYSQL_DB=testdb \
+  -e MYSQL_DATABASE=testdb \
   -e MYSQL_USER=testuser \
   -e MYSQL_PASSWORD=testpassword \
-  -e DATALAYER_CONFIG_PATH=/etc/config.json \
-  -v /path/to/config.json:/etc/config.json \
+  -e DATALAYER_CONFIG_PATH=/etc/content/ \
+  -v /path/to/configfolder/:/etc/content/ \
   mimiro/mysql-datalayer ./mysql-layer
 ```
 
