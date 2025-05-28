@@ -22,7 +22,7 @@ require (
 )
 
 require (
-	github.com/mimiro-io/common-datalayer v0.2.9
+	github.com/mimiro-io/common-datalayer v0.2.10
 	github.com/mimiro-io/entity-graph-data-model v0.7.10
 )
 
