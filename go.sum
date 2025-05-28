@@ -114,8 +114,8 @@ github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/mattn/goveralls v0.0.6/go.mod h1:h8b4ow6FxSPMQHF6o2ve3qsclnffZjYTNEKmLesRwqw=
-github.com/mimiro-io/common-datalayer v0.2.9 h1:4EaaDeU60KkxbjvrG2/efeSAZxESjkFe4sXCIAsIpEI=
-github.com/mimiro-io/common-datalayer v0.2.9/go.mod h1:BPmk0OoevUwnaKlMz+7K4SRCkDCgI3RO1Kx3E57xJbE=
+github.com/mimiro-io/common-datalayer v0.2.10 h1:9IJh+evALWG4XoOugjk4TfsxbQeFEgxliobCzbIn4/k=
+github.com/mimiro-io/common-datalayer v0.2.10/go.mod h1:BPmk0OoevUwnaKlMz+7K4SRCkDCgI3RO1Kx3E57xJbE=
 github.com/mimiro-io/entity-graph-data-model v0.7.10 h1:hJliYFU+ryp2FP/XuiP7TKfYfU/H6E5KSNInDQREr0Y=
 github.com/mimiro-io/entity-graph-data-model v0.7.10/go.mod h1:A76+PPQYwU1UkAl6OPcxh63gCnCIHXd47JLbTQxLNRA=
 github.com/moby/docker-image-spec v1.3.1 h1:jMKff3w6PgbfSa69GfNg+zN/XLhfXJGnEx3Nl2EsFP0=
