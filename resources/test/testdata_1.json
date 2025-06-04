@@ -194,7 +194,6 @@
         "ns3:Id": 10,
         "ns3:Reporter": "4",
         "ns3:Timestamp": "2008-11-24T00:00:00Z",
-        "ns3:DateTest": "2008-11-24",
         "ns3:DateTimeTest": "2008-11-25T00:00:00Z",
         "ns3:Version": 0
     }
