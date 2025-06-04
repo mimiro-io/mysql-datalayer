@@ -54,7 +54,8 @@
                     },
                     {
                         "entity_property": "DateTest",
-                        "property": "date_test"
+                        "property": "date_test",
+                        "default_value": "2008-11-30"
                     },
                     {
                         "entity_property": "DateTimeTest",
@@ -74,6 +75,10 @@
                     {
                         "entity_property": "product_id",
                         "property": "product_id"
+                    },
+                    {
+                        "entity_property": "date_test",
+                        "property": "date_test"
                     }
                 ]
             }

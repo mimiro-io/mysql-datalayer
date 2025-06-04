@@ -63,6 +63,7 @@ func (r *RowItem) GetValue(name string) any {
 		} else {
 			return nil
 		}
+
 	case *sql.NullFloat64:
 		if v.Valid {
 			if v.Float64 == float64(int64(v.Float64)) {
@@ -71,6 +72,12 @@ func (r *RowItem) GetValue(name string) any {
 				return v.Float64
 			}
 
+		} else {
+			return nil
+		}
+	case *sql.NullTime:
+		if v.Valid {
+			return v.Time
 		} else {
 			return nil
 		}

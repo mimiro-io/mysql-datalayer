@@ -148,6 +148,36 @@ func TestDatasetEndpoint(t *testing.T) {
 		}
 	})
 
+	t.Run("Should set a default value if property is missing", func(t *testing.T) {
+		fileBytes, err := os.ReadFile("./resources/test/testdata_1.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+		payload := strings.NewReader(string(fileBytes))
+		http.Post(layerUrl+"/entities", "application/json", payload)
+
+		res, err := http.Get(layerUrl + "/entities")
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// entity graph data model
+		entityParser := egdm.NewEntityParser(egdm.NewNamespaceContext()).WithExpandURIs()
+		ec, err := entityParser.LoadEntityCollection(res.Body)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if len(ec.Entities) != 10 {
+			t.Fatalf("Expected 10 entities, got %d", len(ec.Entities))
+		}
+		if ec.Entities[1].Properties["http://data.sample.org/date_test"] != "2008-11-30T00:00:00Z" {
+			t.Fatalf("Expected date_test to be '2008-11-30T00:00:00Z', got '%s'", ec.Entities[1].Properties["date_test"])
+		}
+	})
+
 	t.Run("Should read changes back from table", func(t *testing.T) {
 		fileBytes, _ := os.ReadFile("./resources/test/testdata_2.json")
 		payload := strings.NewReader(string(fileBytes))
