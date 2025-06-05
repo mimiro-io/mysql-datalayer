@@ -202,8 +202,60 @@ func (o *MysqlWriter) flush() error {
 
 	return nil
 }
-
 func (o *MysqlWriter) insert(item *RowItem) error {
+	// Always create a new INSERT statement for each item, but batch them together
+	var sb strings.Builder
+	sb.WriteString("INSERT INTO ")
+	sb.WriteString(o.table)
+	sb.WriteString(" (")
+
+	for i, col := range item.Columns {
+		if i > 0 {
+			sb.WriteString(", ")
+		}
+		sb.WriteString(strings.ToLower(col))
+	}
+
+	if o.sinceColumn != "" {
+		sb.WriteString(", ")
+		sb.WriteString(strings.ToLower(o.sinceColumn))
+	}
+
+	sb.WriteString(") VALUES (")
+
+	for i, val := range item.Values {
+		colName := item.Columns[i]
+		if i > 0 {
+			sb.WriteString(", ")
+		}
+		sb.WriteString(o.sqlVal(val, colName))
+	}
+
+	var sincePrecision string
+	if o.sincePrecision != "" {
+		sincePrecision = o.sincePrecision
+	} else {
+		sincePrecision = "6"
+	}
+	if o.sinceColumn != "" {
+		sb.WriteString(", NOW(")
+		sb.WriteString(sincePrecision)
+		sb.WriteString(")")
+	}
+
+	sb.WriteString(")")
+
+	// Add this statement to the batch, separated by semicolons
+	if o.batch.Len() > 0 {
+		o.batch.WriteString(";\n")
+	}
+	o.batch.WriteString(sb.String())
+
+	o.batchSize++
+	return nil
+}
+
+/*func (o *MysqlWriter) insert(item *RowItem) error {
 	if o.batch.Len() == 0 {
 		// Start building the INSERT statement
 		o.batch.WriteString("INSERT INTO ")
@@ -255,7 +307,7 @@ func (o *MysqlWriter) insert(item *RowItem) error {
 
 	o.batchSize++
 	return nil
-}
+}*/
 
 func (o *MysqlWriter) begin() error {
 	tx, err := o.db.Begin()

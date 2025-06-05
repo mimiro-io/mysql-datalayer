@@ -178,6 +178,35 @@ func TestDatasetEndpoint(t *testing.T) {
 		}
 	})
 
+	t.Run("Should not set column if property is missing and no default_value", func(t *testing.T) {
+		fileBytes, err := os.ReadFile("./resources/test/testdata_4.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+		payload := strings.NewReader(string(fileBytes))
+		http.Post("http://localhost:17777/datasets/products3/entities", "application/json", payload)
+
+		res, err := http.Get("http://localhost:17777/datasets/products3/entities")
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// entity graph data model
+		entityParser := egdm.NewEntityParser(egdm.NewNamespaceContext()).WithExpandURIs()
+		ec, err := entityParser.LoadEntityCollection(res.Body)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if len(ec.Entities) != 10 {
+			t.Fatalf("Expected 10 entities, got %d", len(ec.Entities))
+		}
+		if ec.Entities[7].Properties["http://data.sample.org/version"] != 987654321 {
+			t.Fatalf("Expected version to be 987654321, got '%d'", ec.Entities[7].Properties["version"])
+		}
+	})
 	t.Run("Should read changes back from table", func(t *testing.T) {
 		fileBytes, _ := os.ReadFile("./resources/test/testdata_2.json")
 		payload := strings.NewReader(string(fileBytes))
