@@ -314,6 +314,80 @@
             }
         },
         {
+            "name": "products3",
+            "source_config": {
+                "table_name" : "product",
+                "since_column" : "Timestamp",
+                "since_table" : "product",
+                "since_precision": "4",
+                "flush_threshold": 1000
+            },
+            "incoming_mapping_config": {
+                "base_uri": "http://data.test.io/newtestnamespace/product/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "strip_ref_prefix": true
+                    },
+                    {
+                        "entity_property": "Product_Id",
+                        "property": "product_id"
+                    },
+                    {
+                        "entity_property": "ProductPrice",
+                        "property": "productprice"
+                    },
+                    {
+                        "entity_property": "Date",
+                        "property": "date",
+                        "datatype": "datetime"
+                    },
+                    {
+                        "entity_property": "Reporter",
+                        "property": "reporter"
+                    },
+                    {
+                        "entity_property": "Version",
+                        "property": "version"
+                    },
+                    {
+                        "entity_property": "DateTest",
+                        "property": "date_test",
+                        "default_value": "2008-11-30"
+                    },
+                    {
+                        "entity_property": "DateTimeTest",
+                        "property": "datetime_test",
+                        "datatype": "datetime"
+                    }
+                ]
+            },
+            "outgoing_mapping_config": {
+                "base_uri": "http://data.sample.org/",
+                "property_mappings": [
+                    {
+                        "property": "id",
+                        "is_identity": true,
+                        "uri_value_pattern": "http://data.sample.org/things/{value}"
+                    },
+                    {
+                        "entity_property": "product_id",
+                        "property": "product_id"
+                    },
+                    {
+                        "entity_property": "date_test",
+                        "property": "date_test"
+                    },
+                    {
+                        "entity_property": "version",
+                        "default_value": 987654321,
+                        "property": "version"
+                    }
+                ]
+            }
+        },
+        {
             "name": "customers",
             "source_config": {
                 "table_name" : "customer",
