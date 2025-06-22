@@ -179,15 +179,28 @@ func (o *MysqlWriter) flush() error {
 	if o.batchSize == 0 {
 		return nil
 	}
-
-	// execute the batch
+	// execute the delete first
 	delstmt := o.deleteBatch.String()
+	deltxn := "BEGIN;\n\n" + delstmt + ";\nCOMMIT;"
+	o.logger.Debug(deltxn)
+	_, err := o.tx.ExecContext(o.ctx, deltxn)
+	if err != nil {
+		if o.tx != nil {
+			err2 := o.tx.Rollback()
+			if err2 != nil {
+				o.logger.Error("Failed to rollback transaction")
+				return fmt.Errorf("failed to rollback transaction: %w, underlying: %w", err2, err)
+			}
+			o.logger.Debug("Delete transaction rolled back")
+		}
+		return err
+	}
 	stmt := o.batch.String()
-	stmt = "BEGIN;\n\n" + delstmt + ";\n" + stmt
+	stmt = "BEGIN;\n\n" + stmt
 	stmt += ";\nCOMMIT;"
 	o.logger.Debug(stmt)
 
-	_, err := o.tx.ExecContext(o.ctx, stmt)
+	_, err = o.tx.ExecContext(o.ctx, stmt)
 	if err != nil {
 		if o.tx != nil {
 			err2 := o.tx.Rollback()
