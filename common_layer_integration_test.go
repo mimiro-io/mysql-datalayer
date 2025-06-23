@@ -203,8 +203,8 @@ func TestDatasetEndpoint(t *testing.T) {
 		if len(ec.Entities) != 10 {
 			t.Fatalf("Expected 10 entities, got %d", len(ec.Entities))
 		}
-		if ec.Entities[7].Properties["http://data.sample.org/version"] != 987654321 {
-			t.Fatalf("Expected version to be 987654321, got '%d'", ec.Entities[7].Properties["version"])
+		if ec.Entities[7].Properties["http://data.sample.org/version"] != 987654321.0000 {
+			t.Fatalf("Expected version to be 987654321, got '%f'", ec.Entities[7].Properties["http://data.sample.org/version"])
 		}
 	})
 	t.Run("Should read changes back from table", func(t *testing.T) {
