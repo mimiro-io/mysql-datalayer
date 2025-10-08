@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	common "github.com/mimiro-io/common-datalayer"
-	egdm "github.com/mimiro-io/entity-graph-data-model"
 	"strings"
 	"time"
+
+	common "github.com/mimiro-io/common-datalayer"
+	egdm "github.com/mimiro-io/entity-graph-data-model"
 )
 
 func (d *Dataset) FullSync(ctx context.Context, batchInfo common.BatchInfo) (common.DatasetWriter, common.LayerError) {
@@ -107,14 +108,14 @@ func (o *MysqlWriter) Write(entity *egdm.Entity) common.LayerError {
 	o.deleteBatch.WriteString(o.sqlVal(item.Map[o.idColumn], "id"))
 	// if the entity is deleted continue
 	if entity.IsDeleted {
-		return nil
+		o.batchSize++
+	} else {
+		err = o.insert(item)
+		if err != nil {
+			return common.Err(err, common.LayerErrorInternal)
+		}
 	}
 
-	err = o.insert(item)
-
-	if err != nil {
-		return common.Err(err, common.LayerErrorInternal)
-	}
 	if o.batchSize >= o.flushThreshold {
 		err = o.flush()
 		if err != nil {
@@ -181,26 +182,31 @@ func (o *MysqlWriter) flush() error {
 	}
 	// execute the delete first
 	delstmt := o.deleteBatch.String()
-	deltxn := "BEGIN;\n\n" + delstmt + ";\nCOMMIT;"
-	o.logger.Debug(deltxn)
-	_, err := o.tx.ExecContext(o.ctx, deltxn)
-	if err != nil {
-		if o.tx != nil {
-			err2 := o.tx.Rollback()
-			if err2 != nil {
-				o.logger.Error("Failed to rollback transaction")
-				return fmt.Errorf("failed to rollback transaction: %w, underlying: %w", err2, err)
+	if delstmt != "" {
+		deltxn := "BEGIN;\n\n" + delstmt + ";\nCOMMIT;"
+		o.logger.Debug(deltxn)
+		_, err := o.tx.ExecContext(o.ctx, deltxn)
+		if err != nil {
+			if o.tx != nil {
+				err2 := o.tx.Rollback()
+				if err2 != nil {
+					o.logger.Error("Failed to rollback transaction")
+					return fmt.Errorf("failed to rollback transaction: %w, underlying: %w", err2, err)
+				}
+				o.logger.Debug("Delete transaction rolled back")
 			}
-			o.logger.Debug("Delete transaction rolled back")
+			return err
 		}
-		return err
 	}
 	stmt := o.batch.String()
+	if stmt == "" {
+		return nil
+	}
 	stmt = "BEGIN;\n\n" + stmt
 	stmt += ";\nCOMMIT;"
 	o.logger.Debug(stmt)
 
-	_, err = o.tx.ExecContext(o.ctx, stmt)
+	_, err := o.tx.ExecContext(o.ctx, stmt)
 	if err != nil {
 		if o.tx != nil {
 			err2 := o.tx.Rollback()
