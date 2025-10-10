@@ -492,4 +492,36 @@ func TestDatasetEndpoint(t *testing.T) {
 			t.Fatalf("Expected 0 rows after deletion, got %d", count)
 		}
 	})
+
+	t.Run("Should handle duplicate ids in payload", func(t *testing.T) {
+
+		// Prepare a payload with two entities with the same id. One having a newer recorded timestamp than the other
+		fileBytes, _ := os.ReadFile("./resources/test/testdata_6.json")
+		payload := strings.NewReader(string(fileBytes))
+		res, err := http.Post(layerUrl+"products/entities", "application/json", payload)
+		if err != nil || res.StatusCode != http.StatusOK {
+			t.Fatalf("Unexpected response: %v", err)
+		}
+
+		// Query the product table for id=1
+		var count int
+		err = conn.QueryRowContext(context.Background(), "SELECT COUNT(*) FROM product WHERE id = 1").Scan(&count)
+		if err != nil {
+			t.Fatalf("Failed to query product table: %v", err)
+		}
+		if count != 1 {
+			t.Fatalf("Expected 1 row for duplicate id, got %d", count)
+		}
+		// Check that the row reflects the latest update
+		var productprice int
+		var reporter string
+		err = conn.QueryRowContext(context.Background(), "SELECT productprice, reporter FROM product WHERE id = 1").Scan(&productprice, &reporter)
+		if err != nil {
+			t.Fatalf("Failed to query product table for values: %v", err)
+		}
+		if productprice != 198 || reporter != "5" {
+			t.Fatalf("Expected latest update values, got productprice=%d, reporter=%s", productprice, reporter)
+		}
+		emptyProductsTable(conn, t)
+	})
 }
