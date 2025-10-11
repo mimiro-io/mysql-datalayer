@@ -65,6 +65,7 @@ func (d *Dataset) newMysqlWriter(ctx context.Context) (*MysqlWriter, common.Laye
 		propertyMappings: propertyMappings,
 		appendMode:       d.datasetDefinition.SourceConfig[AppendMode] == true,
 		idColumn:         idColumn,
+		batchInserts:     make(map[string]EntityInsert),
 	}, nil
 }
 
@@ -78,12 +79,19 @@ type MysqlWriter struct {
 	idColumn         string
 	sinceColumn      string
 	sincePrecision   string
-	batch            strings.Builder
-	deleteBatch      strings.Builder
+	batchInserts     map[string]EntityInsert
+	deleteIds        []string
 	batchSize        int
 	flushThreshold   int
 	appendMode       bool
 	propertyMappings []*common.EntityToItemPropertyMapping
+}
+
+type EntityInsert struct {
+	Id           string
+	Recorded     uint64
+	RowItem      *RowItem
+	InsertString string
 }
 
 func (o *MysqlWriter) Write(entity *egdm.Entity) common.LayerError {
@@ -95,24 +103,48 @@ func (o *MysqlWriter) Write(entity *egdm.Entity) common.LayerError {
 	// set the deleted flag, we always need this to do the right thing in upsert mode
 	item.deleted = entity.IsDeleted
 
-	// add delete statement to delete batch
-	if o.deleteBatch.Len() == 0 {
-		o.deleteBatch.WriteString("DELETE FROM ")
-		o.deleteBatch.WriteString(o.table)
-		o.deleteBatch.WriteString(" WHERE ")
-	} else {
-		o.deleteBatch.WriteString(" OR ")
+	// add id to list of ids to delete (even the ones that will be inserted after)
+	found := false
+	for _, id := range o.deleteIds {
+		if id == item.Map[o.idColumn].(string) {
+			found = true
+			break
+		}
 	}
-	o.deleteBatch.WriteString(o.idColumn)
-	o.deleteBatch.WriteString(" = ")
-	o.deleteBatch.WriteString(o.sqlVal(item.Map[o.idColumn], "id"))
+	if !found {
+		o.deleteIds = append(o.deleteIds, item.Map[o.idColumn].(string))
+	}
+
 	// if the entity is deleted continue
 	if entity.IsDeleted {
 		o.batchSize++
 	} else {
-		err = o.insert(item)
-		if err != nil {
-			return common.Err(err, common.LayerErrorInternal)
+		doInsert := false
+		existing, exists := o.batchInserts[item.Map[o.idColumn].(string)]
+		if exists {
+			// already in batch, check which one is newer
+			if entity.Recorded >= existing.Recorded {
+				// replace existing with newer version
+				o.batchInserts[item.Map[o.idColumn].(string)] = EntityInsert{
+					Id:       item.Map[o.idColumn].(string),
+					Recorded: entity.Recorded,
+					RowItem:  item,
+				}
+				doInsert = true
+			}
+		} else {
+			o.batchInserts[item.Map[o.idColumn].(string)] = EntityInsert{
+				Id:       item.Map[o.idColumn].(string),
+				Recorded: entity.Recorded,
+				RowItem:  item,
+			}
+			doInsert = true
+		}
+		if doInsert {
+			err = o.insert(o.batchInserts[item.Map[o.idColumn].(string)].RowItem)
+			if err != nil {
+				return common.Err(err, common.LayerErrorInternal)
+			}
 		}
 	}
 
@@ -122,8 +154,8 @@ func (o *MysqlWriter) Write(entity *egdm.Entity) common.LayerError {
 			return common.Err(err, common.LayerErrorInternal)
 		}
 		o.batchSize = 0
-		o.batch.Reset()
-		o.deleteBatch.Reset()
+		o.batchInserts = make(map[string]EntityInsert)
+		o.deleteIds = []string{}
 	}
 	return nil
 }
@@ -181,9 +213,22 @@ func (o *MysqlWriter) flush() error {
 		return nil
 	}
 	// execute the delete first
-	delstmt := o.deleteBatch.String()
-	if delstmt != "" {
-		deltxn := "BEGIN;\n\n" + delstmt + ";\nCOMMIT;"
+	if len(o.deleteIds) > 0 {
+		var deleteStatement strings.Builder
+		deleteStatement.WriteString("DELETE FROM ")
+		deleteStatement.WriteString(o.table)
+		deleteStatement.WriteString(" WHERE ")
+		deleteStatement.WriteString(o.idColumn)
+		deleteStatement.WriteString(" IN (")
+		for i, id := range o.deleteIds {
+			if i > 0 {
+				deleteStatement.WriteString(", ")
+			}
+			deleteStatement.WriteString(o.sqlVal(id, "id"))
+		}
+		deleteStatement.WriteString(");")
+
+		deltxn := "BEGIN;\n\n" + deleteStatement.String() + "\nCOMMIT;"
 		o.logger.Debug(deltxn)
 		_, err := o.tx.ExecContext(o.ctx, deltxn)
 		if err != nil {
@@ -198,12 +243,19 @@ func (o *MysqlWriter) flush() error {
 			return err
 		}
 	}
-	stmt := o.batch.String()
-	if stmt == "" {
+
+	if len(o.batchInserts) == 0 {
 		return nil
 	}
-	stmt = "BEGIN;\n\n" + stmt
-	stmt += ";\nCOMMIT;"
+	var insertStatement strings.Builder
+	for _, insert := range o.batchInserts {
+		if len(insertStatement.String()) > 0 {
+			insertStatement.WriteString(";\n")
+		}
+		insertStatement.WriteString(insert.InsertString)
+	}
+
+	stmt := "BEGIN;\n\n" + insertStatement.String() + ";\nCOMMIT;"
 	o.logger.Debug(stmt)
 
 	_, err := o.tx.ExecContext(o.ctx, stmt)
@@ -264,11 +316,9 @@ func (o *MysqlWriter) insert(item *RowItem) error {
 
 	sb.WriteString(")")
 
-	// Add this statement to the batch, separated by semicolons
-	if o.batch.Len() > 0 {
-		o.batch.WriteString(";\n")
-	}
-	o.batch.WriteString(sb.String())
+	batchInsert := o.batchInserts[item.Map[o.idColumn].(string)]
+	batchInsert.InsertString = sb.String()
+	o.batchInserts[item.Map[o.idColumn].(string)] = batchInsert
 
 	o.batchSize++
 	return nil
