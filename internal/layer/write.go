@@ -88,10 +88,11 @@ type MysqlWriter struct {
 }
 
 type EntityInsert struct {
-	Id           string
-	Recorded     uint64
-	RowItem      *RowItem
-	InsertString string
+	Id       string
+	Recorded uint64
+	RowItem  *RowItem
+	Query    string
+	Args     []any
 }
 
 func (o *MysqlWriter) Write(entity *egdm.Entity) common.LayerError {
@@ -176,35 +177,33 @@ func (o *MysqlWriter) Close() common.LayerError {
 	return nil
 }
 
-func (o *MysqlWriter) sqlVal(v any, colName string) string {
-	switch v.(type) {
+func (o *MysqlWriter) sqlArg(v any, colName string) (any, error) {
+	switch typed := v.(type) {
 	case string:
-		for i, _ := range o.propertyMappings {
+		for i := range o.propertyMappings {
 			if o.propertyMappings[i].Property == colName {
 				if o.propertyMappings[i].Datatype == "datetime" {
-					t, err := time.Parse(time.RFC3339, v.(string))
+					t, err := time.Parse(time.RFC3339, typed)
 					if err != nil {
-						return "NULL" // or handle the error as needed
+						return nil, err
 					}
-					v = t.Format("2006-01-02 15:04:05")
-					return fmt.Sprintf("'%s'", v)
+					return t.Format("2006-01-02 15:04:05"), nil
 				} else if o.propertyMappings[i].Datatype == "timestamp" {
-					t, err := time.Parse(time.RFC3339, v.(string))
+					t, err := time.Parse(time.RFC3339, typed)
 					if err != nil {
-						return "NULL" // or handle the error as needed
+						return nil, err
 					}
-					v = t.Format("2006-01-02 15:04:05-0700")
-					return fmt.Sprintf("'%s'", v)
+					return t.Format("2006-01-02 15:04:05-0700"), nil
 				}
 			}
 		}
-		return fmt.Sprintf("'%s'", v)
+		return typed, nil
 	case nil:
-		return "NULL"
+		return nil, nil
 	case bool:
-		return fmt.Sprintf("'%t'", v)
+		return fmt.Sprintf("%t", typed), nil
 	default:
-		return fmt.Sprintf("%v", v)
+		return typed, nil
 	}
 }
 
@@ -214,23 +213,26 @@ func (o *MysqlWriter) flush() error {
 	}
 	// execute the delete first
 	if len(o.deleteIds) > 0 {
-		var deleteStatement strings.Builder
-		deleteStatement.WriteString("DELETE FROM ")
-		deleteStatement.WriteString(o.table)
-		deleteStatement.WriteString(" WHERE ")
-		deleteStatement.WriteString(o.idColumn)
-		deleteStatement.WriteString(" IN (")
-		for i, id := range o.deleteIds {
-			if i > 0 {
-				deleteStatement.WriteString(", ")
+		placeholders := make([]string, 0, len(o.deleteIds))
+		args := make([]any, 0, len(o.deleteIds))
+		for _, id := range o.deleteIds {
+			arg, err := o.sqlArg(id, "id")
+			if err != nil {
+				return err
 			}
-			deleteStatement.WriteString(o.sqlVal(id, "id"))
+			placeholders = append(placeholders, "?")
+			args = append(args, arg)
 		}
-		deleteStatement.WriteString(");")
 
-		deltxn := "BEGIN;\n\n" + deleteStatement.String() + "\nCOMMIT;"
-		o.logger.Debug(deltxn)
-		_, err := o.tx.ExecContext(o.ctx, deltxn)
+		deleteStatement := fmt.Sprintf(
+			"DELETE FROM %s WHERE %s IN (%s)",
+			o.table,
+			o.idColumn,
+			strings.Join(placeholders, ", "),
+		)
+
+		o.logger.Debug(deleteStatement)
+		_, err := o.tx.ExecContext(o.ctx, deleteStatement, args...)
 		if err != nil {
 			if o.tx != nil {
 				err2 := o.tx.Rollback()
@@ -247,28 +249,20 @@ func (o *MysqlWriter) flush() error {
 	if len(o.batchInserts) == 0 {
 		return nil
 	}
-	var insertStatement strings.Builder
 	for _, insert := range o.batchInserts {
-		if len(insertStatement.String()) > 0 {
-			insertStatement.WriteString(";\n")
-		}
-		insertStatement.WriteString(insert.InsertString)
-	}
-
-	stmt := "BEGIN;\n\n" + insertStatement.String() + ";\nCOMMIT;"
-	o.logger.Debug(stmt)
-
-	_, err := o.tx.ExecContext(o.ctx, stmt)
-	if err != nil {
-		if o.tx != nil {
-			err2 := o.tx.Rollback()
-			if err2 != nil {
-				o.logger.Error("Failed to rollback transaction")
-				return fmt.Errorf("failed to rollback transaction: %w, underlying: %w", err2, err)
+		o.logger.Debug(insert.Query)
+		_, err := o.tx.ExecContext(o.ctx, insert.Query, insert.Args...)
+		if err != nil {
+			if o.tx != nil {
+				err2 := o.tx.Rollback()
+				if err2 != nil {
+					o.logger.Error("Failed to rollback transaction")
+					return fmt.Errorf("failed to rollback transaction: %w, underlying: %w", err2, err)
+				}
+				o.logger.Debug("Transaction rolled back")
 			}
-			o.logger.Debug("Transaction rolled back")
+			return err
 		}
-		return err
 	}
 
 	return nil
@@ -294,12 +288,18 @@ func (o *MysqlWriter) insert(item *RowItem) error {
 
 	sb.WriteString(") VALUES (")
 
+	args := make([]any, 0, len(item.Values))
 	for i, val := range item.Values {
 		colName := item.Columns[i]
 		if i > 0 {
 			sb.WriteString(", ")
 		}
-		sb.WriteString(o.sqlVal(val, colName))
+		sb.WriteString("?")
+		arg, err := o.sqlArg(val, colName)
+		if err != nil {
+			return err
+		}
+		args = append(args, arg)
 	}
 
 	var sincePrecision string
@@ -317,7 +317,8 @@ func (o *MysqlWriter) insert(item *RowItem) error {
 	sb.WriteString(")")
 
 	batchInsert := o.batchInserts[item.Map[o.idColumn].(string)]
-	batchInsert.InsertString = sb.String()
+	batchInsert.Query = sb.String()
+	batchInsert.Args = args
 	o.batchInserts[item.Map[o.idColumn].(string)] = batchInsert
 
 	o.batchSize++
