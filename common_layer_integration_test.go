@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 	"time"
@@ -25,6 +26,11 @@ var (
 
 func setup(t *testing.T) testcontainers.Container {
 	ctx := context.Background()
+
+	if _, err := exec.LookPath("docker"); err != nil {
+		t.Skipf("skipping integration test because docker is unavailable: %v", err)
+	}
+
 	req := testcontainers.ContainerRequest{
 		Image:        "mysql:latest",
 		ExposedPorts: []string{"3306/tcp"},
