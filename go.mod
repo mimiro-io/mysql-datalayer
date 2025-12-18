@@ -11,7 +11,6 @@ require (
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/goburrow/cache v0.1.4
 	github.com/gojektech/heimdall/v6 v6.1.0
-	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/juliangruber/go-intersect v1.1.0
 	github.com/labstack/echo/v4 v4.13.3
@@ -22,6 +21,7 @@ require (
 )
 
 require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/mimiro-io/common-datalayer v0.2.10
 	github.com/mimiro-io/entity-graph-data-model v0.7.10
 )

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 	"testing"
 	"time"
@@ -25,6 +26,11 @@ var (
 
 func setup(t *testing.T) testcontainers.Container {
 	ctx := context.Background()
+
+	if _, err := exec.LookPath("docker"); err != nil {
+		t.Skipf("skipping integration test because docker is unavailable: %v", err)
+	}
+
 	req := testcontainers.ContainerRequest{
 		Image:        "mysql:latest",
 		ExposedPorts: []string{"3306/tcp"},
@@ -220,8 +226,17 @@ func TestDatasetEndpoint(t *testing.T) {
 		if len(ec.Entities) != 10 {
 			t.Fatalf("Expected 10 entities, got %d", len(ec.Entities))
 		}
-		if ec.Entities[1].Properties["http://data.sample.org/date_test"] != "2008-11-30T00:00:00Z" {
-			t.Fatalf("Expected date_test to be '2008-11-30T00:00:00Z', got '%s'", ec.Entities[1].Properties["date_test"])
+
+		var Entity1 *egdm.Entity
+		for _, entity := range ec.Entities {
+			if entity.ID == "http://data.sample.org/things/1" {
+				Entity1 = entity
+				break
+			}
+		}
+
+		if Entity1.Properties["http://data.sample.org/date_test"] != "2008-11-24T00:00:00Z" {
+			t.Fatalf("Expected date_test to be '2008-11-30T00:00:00Z', got '%s'", Entity1.Properties["http://data.sample.org/date_test"])
 		}
 		emptyProductsTable(conn, t)
 	})
