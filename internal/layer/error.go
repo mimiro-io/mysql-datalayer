@@ -20,6 +20,6 @@ var (
 		return common.Errorf(common.LayerErrorInternal, "batch size mismatch. rows affected: %d, expected: %d", observed, expected)
 	}
 	ErrGeneric = func(msg string, extra ...any) common.LayerError {
-		return common.Errorf(common.LayerErrorInternal, fmt.Sprintf(msg, extra...))
+		return common.Errorf(common.LayerErrorInternal, "%s", fmt.Sprintf(msg, extra...))
 	}
 )

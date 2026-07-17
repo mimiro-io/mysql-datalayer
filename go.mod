@@ -1,6 +1,6 @@
 module github.com/mimiro-io/mysql-datalayer
 
-go 1.23.0
+go 1.26.5
 
 require (
 	github.com/DataDog/datadog-go/v5 v5.6.0
@@ -11,7 +11,6 @@ require (
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/goburrow/cache v0.1.4
 	github.com/gojektech/heimdall/v6 v6.1.0
-	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/juliangruber/go-intersect v1.1.0
 	github.com/labstack/echo/v4 v4.13.3
@@ -22,6 +21,7 @@ require (
 )
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/mimiro-io/common-datalayer v0.2.10
 	github.com/mimiro-io/entity-graph-data-model v0.7.10
 )
@@ -45,7 +45,7 @@ require (
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
-	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
+	github.com/go-viper/mapstructure/v2 v2.3.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/gojektech/valkyrie v0.0.0-20190210220504-8f62c1e7ba45 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
@@ -95,10 +95,10 @@ require (
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/dig v1.18.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.38.0 // indirect
-	golang.org/x/net v0.40.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/crypto v0.54.0 // indirect
+	golang.org/x/net v0.57.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250505200425-f936aa4a68b2 // indirect
 	google.golang.org/grpc v1.72.0 // indirect
