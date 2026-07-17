@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/juliangruber/go-intersect"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
