@@ -1,4 +1,4 @@
-FROM golang:1.26-alpine AS build
+FROM golang:1.27-alpine AS build
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -32,5 +32,7 @@ ADD resources/default-config.json resources/
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
+
+USER nonroot
 
 CMD ["./server"]
